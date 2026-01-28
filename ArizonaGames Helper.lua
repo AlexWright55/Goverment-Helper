@@ -3,7 +3,7 @@
 script_name("Arizona&RodinaGames Helper")
 script_description('Универсальный скрипт для игроков Arizona Online и Rodina Online')
 script_author("FlipAnderson")
-script_version("0.0.0.1")
+script_version("0.0.0.2")
 ----------------------------------------------- INIT ---------------------------------------------
 function isMonetLoader() return MONET_VERSION ~= nil end
 print('Инициализация скрипта...')
