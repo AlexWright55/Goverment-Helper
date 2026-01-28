@@ -4252,8 +4252,11 @@ function getDeviceID()
 end
 function downloadFileFromUrlToPath(url, path)
 	print('Начинаю скачивание файла в ' .. path)
+	print('тест 2')
 	local function on_finish_download()
+		print('тест 3')
 		if download_file == 'update' then
+			print('тест 1')
 			local function readJsonFile(filePath)
 				if not doesFileExist(filePath) then
 					print('Ошибка: Файл "' .. filePath .. ' не существует')
@@ -4372,7 +4375,7 @@ function check_update()
 	sampAddChatMessage('[ArizonaGames Helper] {ffffff}Проверка на наличие обновлений...', message_color)
 	download_file = 'update'
 	-- https://github.com/MTGMODS/arizona-helper/raw/refs/heads/main/Update.json
-	downloadFileFromUrlToPath('https://github.com/AlexWright55/ArizonaGames-Helper/raw/refs/heads/main/ArizonaGames%20Helper/Update.json', configDirectory .. "/Update.json")
+	downloadFileFromUrlToPath('https://alexwright55.github.io/ArizonaGames-Helper/ArizonaGames%20Helper/Update.json', configDirectory .. "/Update.json")
 end
 function check_resourses()
 	if not doesDirectoryExist(configDirectory .. '/Resourse') then
