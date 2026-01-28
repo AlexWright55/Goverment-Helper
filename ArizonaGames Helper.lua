@@ -4298,7 +4298,7 @@ function downloadFileFromUrlToPath(url, path)
 		elseif download_file == 'helper' then
 			sampAddChatMessage('[ArizonaGames Helper] {ffffff}Загрузка новой версии хелпера успешно завершена! Перезагрузка..',  message_color)
 			-- удаление файла хелпера от дискорда с _ в названии, имя файла только с пробелом
-			os.remove(getWorkingDirectory():gsub('\\','/') .. "Arizona_Helper.lua")
+			os.remove(getWorkingDirectory():gsub('\\','/') .. "ArizonaGames Helper.lua")
 			reload_script = true
 			thisScript():unload()
 		elseif download_file == 'smart_uk' then
