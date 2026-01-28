@@ -1,2 +1,1 @@
-ArizonaGames Helper
-/ArizonaGames Helper.lua
+[ArizonaGames Helper](/ArizonaGames Helper.lua)
