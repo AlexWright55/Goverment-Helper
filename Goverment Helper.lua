@@ -6504,6 +6504,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                                                   indent ..
                                                   updateInfo.news[4].date) then
                         local text = table.concat(updateInfo.news[4].text, "\n")
+                        print(text)
                         imgui.Text(text)
                     end
 
