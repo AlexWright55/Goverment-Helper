@@ -2,7 +2,7 @@
   "current_version": "0.0.0.2",
   "update_url": "https://alexwright55.github.io/Goverment-Helper/Goverment%20Helper.lua",
   "update_info": [
-    { "version": "v0.0.0.1", "date": "30.01.2026", "title": "Обновление 1", "text": "Новый скрипт" },
+    { "version": "v0.0.0.1", "date": "30.01.2026", "title": "Обновление 1", "text": "Создание нового скрипта" },
     { "version": "v0.0.0.2", "date": "30.01.2026", "title": "Обновление 2", "text": "Обновил название скрипта" }
   ]
 }
