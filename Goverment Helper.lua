@@ -6546,7 +6546,12 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                     imgui.Separator()
                     imgui.CenterText(
                         u8 'Список обновлений не загружен!')
-                    imgui.EndChild() -- Закрываем Child только если он был открыт
+                    imgui.Spacing()
+                    if imgui.Button(fa.REDO ..
+                                        u8 ' Повторить загрузку') then
+                        loadUpdates()
+                    end
+                    imgui.EndChild() -- ЗАКРЫВАЕМ Child ЗДЕСЬ!
                 end
             end
             imgui.EndTabItem()
