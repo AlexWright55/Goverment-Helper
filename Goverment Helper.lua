@@ -6547,8 +6547,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                     imgui.CenterText(
                         u8 'Список обновлений не загружен!')
                     imgui.Spacing()
-                    if imgui.Button(fa.REDO ..
-                                        u8 ' Повторить загрузку') then
+                    if imgui.Button(u8 ' Повторить загрузку') then
                         loadUpdates()
                     end
                     imgui.EndChild() -- ЗАКРЫВАЕМ Child ЗДЕСЬ!
