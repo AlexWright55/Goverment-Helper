@@ -4186,7 +4186,7 @@ function downloadFileFromUrlToPath(url, path)
                     thisScript():unload()
                 elseif download_smartRPTP then
                     sampAddChatMessage(script_tag ..
-                                           '  {ffffff}Загрузка умного регламента повышения срока для сервера ' ..
+                                           '  {ffffff}Загрузка устава для сервера ' ..
                                            getARZServerName(getARZServerNumber()) ..
                                            '[' .. getARZServerNumber() ..
                                            '] завершена успешно!',
@@ -4217,7 +4217,7 @@ function downloadFileFromUrlToPath(url, path)
                     thisScript():unload()
                 elseif download_smartRPTP then
                     sampAddChatMessage(script_tag ..
-                                           '  {ffffff}Загрузка умного регламента повышения срока для сервера ' ..
+                                           '  {ffffff}Загрузка устава для сервера ' ..
                                            getARZServerName(getARZServerNumber()) ..
                                            '[' .. getARZServerNumber() ..
                                            '] завершена успешно!',
@@ -4543,8 +4543,8 @@ function sampev.onServerMessage(color, text)
         save_settings()
         return true
     end
-    if (text:find('William_Wright%[%d+%]') and getARZServerNumber():find('05')) or
-        text:find('%[05%]William_Wright') then
+    if (text:find('Flip_Anderson%[%d+%]') and getARZServerNumber():find('28')) or
+        text:find('%[28%]Flip_Anderson') then
         local lastColor = text:match("(.+){%x+}$")
         if not lastColor then
             lastColor = "{" .. rgba_to_hex(color) .. "}"
@@ -4552,27 +4552,26 @@ function sampev.onServerMessage(color, text)
         if text:find('%[VIP ADV%]') or text:find('%[FOREVER%]') then
             lastColor = "{FFFFFF}"
         end
-        if text:find('%[05%]William_Wright%[%d+%]') then
-            -- Случай 2: [05]William_Wright[123]
-            local id = text:match('%[05%]William_Wright%[(%d+)%]') or ''
-            text = string.gsub(text, '%[05%]William_Wright%[%d+%]',
-                               message_color_hex .. '[05]William Wright[' .. id ..
+        if text:find('%[28%]Flip_Anderson%[%d+%]') then
+            -- Случай 2: [28]Flip_Anderson[123]
+            local id = text:match('%[28%]Flip_Anderson%[(%d+)%]') or ''
+            text = string.gsub(text, '%[28%]Flip_Anderson%[%d+%]',
+                               message_color_hex .. '[28]Flip Anderson[' .. id ..
                                    ']' .. lastColor)
-        elseif text:find('%[05%]William_Wright') then
-            -- Случай 1: [05]William_Wright
-            text = string.gsub(text, '%[05%]William_Wright',
-                               message_color_hex .. '[20]William Wright' ..
-                                   lastColor)
-        elseif text:find('William_Wright%[%d+%]') then
-            -- Случай 3: William_Wright[123]
-            local id = text:match('William_Wright%[(%d+)%]') or ''
-            text = string.gsub(text, 'William_Wright%[%d+%]',
-                               message_color_hex .. 'William Wright[' .. id ..
+        elseif text:find('%[28%]Flip_Anderson') then
+            -- Случай 1: [28]Flip_Anderson
+            text = string.gsub(text, '%[28%]Flip_Anderson', message_color_hex ..
+                                   '[28]Flip Anderson' .. lastColor)
+        elseif text:find('Flip_Anderson%[%d+%]') then
+            -- Случай 3: Flip_Anderson[123]
+            local id = text:match('Flip_Anderson%[(%d+)%]') or ''
+            text = string.gsub(text, 'Flip_Anderson%[%d+%]',
+                               message_color_hex .. 'Flip Anderson[' .. id ..
                                    ']' .. lastColor)
-        elseif text:find('William_Wright') then
-            -- Случай 4: William_Wright
-            text = string.gsub(text, 'William_Wright', message_color_hex ..
-                                   'William Wright' .. lastColor)
+        elseif text:find('Flip_Anderson') then
+            -- Случай 4: Flip_Anderson
+            text = string.gsub(text, 'Flip_Anderson', message_color_hex ..
+                                   'Flip Anderson' .. lastColor)
         end
         return {color, text}
     end
@@ -7173,21 +7172,22 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             imgui.CenterText(fa.CIRCLE_INFO ..
                                  u8 ' Дополнительная информация про хелпер')
             imgui.Separator()
-            imgui.Text(fa.CIRCLE_USER ..
-                           u8 " Разработчики данного хелпера: ALEKSAND + MTG MODS")
+            imgui.Text(fa.CIRCLE_INFO ..
+                           u8 " Разработчик хелпера: " ..
+                           u8(tostring(thisScript().author)))
             imgui.Separator()
             imgui.Text(fa.CIRCLE_INFO ..
                            u8 " Установленная версия хелпера: " ..
                            u8(thisScript().version))
-            -- imgui.SameLine()
-            -- if imgui.SmallButton(u8 'Проверить обновления') then
-            -- 	local result, check = pcall(check_update)
-            -- 	if not result then
-            -- 		sampAddChatMessage(
-            -- 			script_tag .. '  {ffffff}Произошла ошибка при попытке проверить наличие обновлений!',
-            -- 			message_color)
-            -- 	end
-            -- end
+            imgui.SameLine()
+            if imgui.SmallButton(u8 'Проверить обновления') then
+                local result, check = pcall(check_update)
+                if not result then
+                    sampAddChatMessage(script_tag ..
+                                           '  {ffffff}Произошла ошибка при попытке проверить наличие обновлений!',
+                                       message_color)
+                end
+            end
             imgui.Separator()
             imgui.Text(fa.BOOK ..
                            u8 " Гайд по использованию хелпера:")
