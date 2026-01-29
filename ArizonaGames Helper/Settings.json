@@ -72,8 +72,8 @@
       "x":1138.3333333333
     },
     "post_menu":{
-      "y":615,
-      "x":1094
+      "y":384,
+      "x":683
     },
     "mobile_fastmenu_button":{
       "y":333.91304347826,
@@ -94,7 +94,7 @@
     "nick":"Flip_Anderson",
     "accent":"[Иностранный акцент]:",
     "sex":"Мужчина",
-    "accent_enable":false
+    "accent_enable":true
   },
   "gov":{
     "zeks_in_screen":true,
@@ -118,7 +118,7 @@
   },
   "departament":{
     "dep_fm":"-",
-    "dep_tag1":"[Право]",
+    "dep_tag1":"",
     "dep_tag2":"[Всем]",
     "dep_fms":["-","- з.к. -"],
     "dep_tags_custom":[],
@@ -128,26 +128,26 @@
   },
   "general":{
     "rp_guns":false,
-    "version":"BETA 12.9.7 VIP",
-    "custom_dpi":1.231,
+    "version":"0.0.0.2",
+    "custom_dpi":1.377,
     "cruise_control":true,
-    "moonmonet_theme_color":8191201,
-    "message_color":8191201,
+    "moonmonet_theme_color":40703,
+    "message_color":40703,
     "bind_command_stop":"[123]",
     "helper_theme":0,
     "piemenu":false,
     "payday_notify":true,
-    "bind_mainmenu":"{}",
+    "bind_mainmenu":"[113]",
     "ping":true,
     "mobile_fastmenu_button":true,
-    "bind_action":"{}",
+    "bind_fastmenu":"[69]",
+    "fraction_mode":"gov",
     "mobile_stop_button":true,
-    "bind_fastmenu":"{}",
     "autofind_dpi":true,
     "auto_uninvite":false,
-    "bind_leader_fastmenu":"{}",
+    "bind_leader_fastmenu":"[71]",
     "key":"",
-    "fraction_mode":"gov"
+    "bind_action":"[13]"
   },
   "smi":{
     "use_ads_buttons":true,
