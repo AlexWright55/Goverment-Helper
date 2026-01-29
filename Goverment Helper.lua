@@ -2,7 +2,7 @@
 script_name("Goverment Helper")
 script_description('Скрипт для Правительства')
 script_author("Flip Anderson")
-script_version("0.0.0.2")
+script_version("0.0.0.3")
 
 require('lib.moonloader')
 require('encoding').default = 'CP1251'
@@ -6504,7 +6504,6 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                                                   indent ..
                                                   updateInfo.news[4].date) then
                         local text = table.concat(updateInfo.news[4].text, "\n")
-                        print(text)
                         imgui.Text(text)
                     end
 
