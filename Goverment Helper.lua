@@ -2,7 +2,7 @@
 script_name("Goverment Helper")
 script_description('Скрипт для Правительства')
 script_author("Flip Anderson")
-script_version("0.0.0.4")
+script_version("0.0.0.5")
 
 require('lib.moonloader')
 require('encoding').default = 'CP1251'
@@ -18,6 +18,7 @@ local settings = {}
 local default_settings = {
     general = {
         version = thisScript().version,
+        author = 'Flip Anderson',
         accent_enable = true,
         auto_mask = false,
         rp_chat = true,
@@ -30,7 +31,7 @@ local default_settings = {
         auto_clicker_situation = true,
         use_form_su = false,
         moonmonet_theme_enable = true,
-        moonmonet_theme_color = 8900331,
+        moonmonet_theme_color = 16776960,
         mobile_fastmenu_button = true,
         mobile_stop_button = true,
         use_binds = true,
@@ -40,8 +41,9 @@ local default_settings = {
         bind_leader_fastmenu = '[71]',
         bind_command_stop = '[123]',
         auto_doklad = false,
-        post_status = 'Неизвестно'
-
+        post_status = 'Неизвестно',
+        rp_guns = true,
+        custom_dpi = 1.0
     },
     player_info = {
         name_surname = '',
@@ -51,18 +53,6 @@ local default_settings = {
         fraction_rank = 'Неизвестно',
         fraction_rank_number = 0,
         sex = 'Неизвестно'
-    },
-    player_organization_general = {
-        use_infojob_menu = false,
-        materials = 0,
-        postavki_kargobob = 0,
-        postavki_materials = 0
-    },
-    player_organization_now = {
-        use_infojob_menu = false,
-        materials = 0,
-        postavki_kargobob = 0,
-        postavki_materials = 0
     },
     deportament = {
         dep_fm = '-',
@@ -146,6 +136,9 @@ local configDirectory = getWorkingDirectory():gsub('\\', '/') ..
                             "/Goverment Helper"
 local path_helper = getWorkingDirectory():gsub('\\', '/') ..
                         "/Goverment Helper.lua"
+local folderDirectory = string.format('rd /s /q "%s"',
+                                      configDirectory:gsub('/', '\\'))
+
 local path_settings = configDirectory .. "/Settings.json"
 function load_settings()
     if not doesDirectoryExist(configDirectory) then
@@ -327,6 +320,454 @@ function save_smart_rptp()
 end
 
 load_smart_rptp()
+
+------------------------------------------ JSON & MODULES ----------------------------------------
+local modules = {
+    rpgun = {
+        name = 'RP оружие',
+        path = configDirectory .. "/Guns.json",
+        data = {
+            rp_guns = {
+                {id = 0, name = 'кулаки', enable = true, rpTake = 2},
+                {id = 1, name = 'кастеты', enable = false, rpTake = 2},
+                {
+                    id = 2,
+                    name = 'клюшку для гольфа',
+                    enable = false,
+                    rpTake = 1
+                }, {id = 3, name = 'дубинку', enable = true, rpTake = 3},
+                {
+                    id = 4,
+                    name = 'острый нож',
+                    enable = false,
+                    rpTake = 3
+                }, {id = 5, name = 'биту', enable = false, rpTake = 1},
+                {id = 6, name = 'лопату', enable = true, rpTake = 1},
+                {id = 7, name = 'кий', enable = false, rpTake = 1},
+                {id = 8, name = 'катану', enable = false, rpTake = 1},
+                {
+                    id = 9,
+                    name = 'бензопилу',
+                    enable = false,
+                    rpTake = 1
+                },
+                {id = 10, name = 'игрушку', enable = false, rpTake = 2},
+                {
+                    id = 11,
+                    name = 'большую игрушку',
+                    enable = false,
+                    rpTake = 2
+                },
+                {
+                    id = 12,
+                    name = 'моторную игрушку',
+                    enable = false,
+                    rpTake = 2
+                },
+                {
+                    id = 13,
+                    name = 'большую игрушку',
+                    enable = false,
+                    rpTake = 2
+                },
+                {
+                    id = 14,
+                    name = 'букет цветов',
+                    enable = true,
+                    rpTake = 1
+                }, {id = 15, name = 'трость', enable = false, rpTake = 1},
+                {
+                    id = 16,
+                    name = 'осколочную гранату',
+                    enable = false,
+                    rpTake = 3
+                },
+                {
+                    id = 17,
+                    name = 'дымовую гранату',
+                    enable = true,
+                    rpTake = 3
+                }, {
+                    id = 18,
+                    name = 'коктейль Молотова',
+                    enable = true,
+                    rpTake = 3
+                },
+                {
+                    id = 22,
+                    name = 'пистолет Colt45',
+                    enable = false,
+                    rpTake = 4
+                }, {
+                    id = 23,
+                    name = "электрошокер Taser X26P",
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 24,
+                    name = 'пистолет Desert Eagle',
+                    enable = true,
+                    rpTake = 4
+                },
+                {id = 25, name = 'дробовик', enable = true, rpTake = 1},
+                {id = 26, name = 'обрез', enable = true, rpTake = 4},
+                {
+                    id = 27,
+                    name = 'улучшенный обрез',
+                    enable = false,
+                    rpTake = 1
+                },
+                {id = 28, name = 'ПП Micro Uzi', enable = true, rpTake = 3},
+                {id = 29, name = 'ПП MP5', enable = true, rpTake = 4},
+                {
+                    id = 30,
+                    name = 'автомат AK47',
+                    enable = true,
+                    rpTake = 1
+                },
+                {id = 31, name = 'автомат M4', enable = true, rpTake = 1},
+                {id = 32, name = 'ПП Tec9', enable = true, rpTake = 4},
+                {
+                    id = 33,
+                    name = 'винтовку Rifle',
+                    enable = true,
+                    rpTake = 1
+                }, {
+                    id = 34,
+                    name = 'снайперскую винтовку',
+                    enable = true,
+                    rpTake = 1
+                }, {id = 35, name = 'РПГ', enable = false, rpTake = 1},
+                {id = 36, name = 'ПТУР', enable = false, rpTake = 1},
+                {id = 37, name = 'огнемёт', enable = false, rpTake = 1},
+                {id = 38, name = 'миниган', enable = false, rpTake = 1},
+                {id = 39, name = 'динамит', enable = false, rpTake = 3},
+                {
+                    id = 40,
+                    name = 'детонатор',
+                    enable = false,
+                    rpTake = 3
+                }, {
+                    id = 41,
+                    name = 'перцовый балончик',
+                    enable = true,
+                    rpTake = 2
+                },
+                {
+                    id = 42,
+                    name = 'огнетушитель',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 43,
+                    name = 'фотоапарат',
+                    enable = true,
+                    rpTake = 2
+                }, {id = 44, name = 'ПНВ', enable = false, rpTake = 3},
+                {
+                    id = 45,
+                    name = 'тепловизор',
+                    enable = false,
+                    rpTake = 3
+                },
+                {id = 46, name = 'парашут', enable = true, rpTake = 1},
+                -- gta sa damage reason
+                {id = 49, name = 'т/с', enable = false, rpTake = 1}, {
+                    id = 50,
+                    name = 'лопасти вертолёта',
+                    enable = false,
+                    rpTake = 1
+                },
+                {id = 51, name = 'гранату', enable = false, rpTake = 1},
+                {
+                    id = 54,
+                    name = 'коллизию/тюнинг',
+                    enable = false,
+                    rpTake = 1
+                }, -- ARZ CUSTOM GUN
+                {
+                    id = 71,
+                    name = 'пистолет Desert Eagle Steel',
+                    enable = true,
+                    rpTake = 4
+                }, {
+                    id = 72,
+                    name = 'пистолет Desert Eagle Gold',
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 73,
+                    name = 'пистолет Glock Gradient',
+                    enable = true,
+                    rpTake = 4
+                }, {
+                    id = 74,
+                    name = 'пистолет Desert Eagle Flame',
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 75,
+                    name = 'пистолет Python Royal',
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 76,
+                    name = 'пистолет Python Silver',
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 77,
+                    name = 'автомат AK-47 Roses',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 78,
+                    name = 'автомат AK-47 Gold',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 79,
+                    name = 'пулемёт M249 Graffiti',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 80,
+                    name = 'золотую Сайгу',
+                    enable = true,
+                    rpTake = 1
+                }, {id = 81, name = 'ПП Standart', enable = true, rpTake = 4},
+                {
+                    id = 82,
+                    name = 'пулемёт M249',
+                    enable = true,
+                    rpTake = 1
+                }, {id = 83, name = 'ПП Skorp', enable = true, rpTake = 4}, {
+                    id = 84,
+                    name = 'автомат AKS74 камуфляжный',
+                    enable = true,
+                    rpTake = 1
+                }, {
+                    id = 85,
+                    name = 'автомат AK47 камуфляжный',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 86,
+                    name = 'дробовик Rebecca',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 87,
+                    name = 'портальную пушку',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 88,
+                    name = 'ледяной меч',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 89,
+                    name = 'портальную пушку',
+                    enable = true,
+                    rpTake = 4
+                }, {
+                    id = 90,
+                    name = 'оглушающую гранату',
+                    enable = true,
+                    rpTake = 3
+                }, {
+                    id = 91,
+                    name = 'ослепляющую гранату',
+                    enable = true,
+                    rpTake = 3
+                }, {
+                    id = 92,
+                    name = 'снайперскую винтовку TAC50',
+                    enable = true,
+                    rpTake = 1
+                }, {
+                    id = 93,
+                    name = 'оглушающий пистолет',
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 94,
+                    name = 'снежную пушку',
+                    enable = true,
+                    rpTake = 1
+                }, {
+                    id = 95,
+                    name = 'пиксельный бластер',
+                    enable = true,
+                    rpTake = 3
+                },
+                {
+                    id = 96,
+                    name = 'автомат M4 Gold',
+                    enable = true,
+                    rpTake = 1
+                }, {
+                    id = 97,
+                    name = 'бандитский дробовик',
+                    enable = true,
+                    rpTake = 1
+                },
+                {id = 98, name = 'ПП Uzi Graffiti', enable = true, rpTake = 4},
+                {
+                    id = 99,
+                    name = 'золотую монтировку',
+                    enable = true,
+                    rpTake = 1
+                },
+                {id = 100, name = 'биту Compton', enable = true, rpTake = 1},
+                {
+                    id = 101,
+                    name = 'пистолет SciFi Deagle',
+                    enable = true,
+                    rpTake = 4
+                },
+                {
+                    id = 102,
+                    name = 'автомат SciFi AK47',
+                    enable = true,
+                    rpTake = 1
+                },
+                {
+                    id = 103,
+                    name = 'дробовик SciFi',
+                    enable = true,
+                    rpTake = 1
+                }, {id = 104, name = 'нож SciFi', enable = true, rpTake = 3},
+                {id = 105, name = 'сканер', enable = false, rpTake = 4},
+                {
+                    id = 106,
+                    name = 'золотой нож',
+                    enable = true,
+                    rpTake = 3
+                },
+                {
+                    id = 107,
+                    name = 'катану Нир',
+                    enable = true,
+                    rpTake = 1
+                }
+            },
+            rpTakeNames = {
+                {"из-за спины", "за спину"},
+                {"из кармана", "в карман"},
+                {"из пояса", "на пояс"},
+                {"из кобуры", "в кобуру"}
+            },
+            gunActions = {on = {}, off = {}, partOn = {}, partOff = {}},
+            oldGun = nil,
+            nowGun = 0
+        }
+    }
+}
+function load_module(key)
+    local obj = modules[key]
+    if not obj then
+        print('Ошибка: неизвестный модуль "' .. key ..
+                  '"!')
+    else
+        if doesFileExist(obj.path) then
+            local file, errstr = io.open(obj.path, 'r')
+            if file then
+                local contents = file:read('*a')
+                file:close()
+                if #contents == 0 then
+                    print('Не удалось открыть модуль "' ..
+                              obj.name ..
+                              '". Причина: файл пустой')
+                else
+                    local result, loaded = pcall(decodeJson, contents)
+                    if result then
+                        obj.data = loaded
+                        print('Модуль "' .. obj.name ..
+                                  '" инициализирован! (есть ваши кастомные данные)')
+                    else
+                        print(
+                            'Не удалось открыть модуль "' ..
+                                obj.name .. '". Ошибка: decode json')
+                    end
+                end
+            else
+                print('Не удалось открыть модуль "' ..
+                          obj.name .. '". Ошибка: ' ..
+                          tostring(errstr or "неизвестная"))
+            end
+        else
+            print('Модуль "' .. obj.name ..
+                      '" инициализирован!')
+        end
+    end
+end
+function save_module(key)
+    local obj = modules[key]
+    if not obj then
+        print('Ошибка: неизвестный модуль "' .. key ..
+                  '"!')
+    else
+        local file, errstr = io.open(obj.path, 'w')
+        if file then
+            local function looklike(array)
+                local dkok, dkjson = pcall(require, "dkjson")
+                if dkok then
+                    local ok, encoded = pcall(dkjson.encode, array,
+                                              {indent = true})
+                    if ok then return encoded end
+                else
+                    local ok, encoded = pcall(encodeJson, array)
+                    if ok then return encoded end
+                end
+            end
+            local content = looklike(obj.data)
+            if content then
+                file:write(content)
+                print('Модуль "' .. obj.name .. '" сохранён!')
+            else
+                print('Не удалось сохранить модуль "' ..
+                          obj.name ..
+                          '" - ошибка кодировки json!')
+            end
+            file:close()
+        else
+            print('Не удалось сохранить модуль "' ..
+                      obj.name .. '", ошибка: ' ..
+                      tostring(errstr or "неизвестная"))
+        end
+    end
+end
+---------------------------------------------- JSON RPGUNS  ------------------------------------------------------
+local MODULE = {
+    RPWeapon = {
+        Window = imgui.new.bool(),
+        ComboTags = imgui.new.int(),
+        item_list = {
+            u8 'Спина', u8 'Карман', u8 'Пояс', u8 'Кобура'
+        },
+        ImItems = imgui.new['const char*'][4]({
+            u8 'Спина', u8 'Карман', u8 'Пояс', u8 'Кобура'
+        }),
+        input_search = imgui.new.char[256]('')
+    },
+    FONT = nil
+}
 -------------------------------------------- JSON COMMANDS (Команды) ---------------------------------------------
 local commands = {
     commands = {
@@ -338,59 +779,10 @@ local commands = {
             enable = true,
             waiting = '3.5'
         }, {
-            cmd = 'take',
-            description = 'Изьятие предметов игрока',
-            text = '/do В подсумке находиться небольшой зип-пакет.&/me достаёт из подсумка зип-пакет и отрывает его&/me кладёт в зип-пакет изьятые предметы задержанного человека&/take {arg_id}&/do Изьятые предметы в зип-пакете.&/todo Отлично*убирая зип-пакет в подсумок',
-            arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
             cmd = 'cure',
             description = 'Поднять игрока из стадии',
             text = '/me наклоняется над человеком, и прощупывает его пульс на сонной артерии&/cure {arg_id}&/do Пульс отсутствует.&/me начинает делать человеку непрямой массаж сердца, время от времени проверяя пульс&/do Спустя несколько минут сердце человека началось биться.&/do Человек пришел в сознание.&/todo Отлично*улыбаясь',
             arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'uncarcer',
-            description = 'Выпуск из карцера игрока',
-            text = '/do На поясе висит связка ключей.&/me движениями рук снял ключ со связки, открыл камеру и вытолкнул из неё заключённого&/me закрыл дверцу камеры, закрепил ключ к связке&/uncarcer {arg_id}',
-            arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'cuff',
-            description = 'Надеть наручники',
-            text = '/do Наручники на тактическом поясе.&/me снимает наручники с пояса и надевает их на задержанного&/cuff {arg_id}&/do Задержанный в наручниках.',
-            arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'uncuff',
-            description = 'Снять наручники',
-            text = '/do На тактическом поясе прикреплены ключи от наручников.&/me снимает с пояса ключ от наручников и вставляет их в наручники задержанного&/me прокручивает ключ в наручниках и снимает их с задержанного&&/uncuff {arg_id}&/do Наручники сняты с задержанного&/me кладёт ключ и наручники обратно на тактический пояс',
-            arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'gotome',
-            description = 'Повести за собой',
-            text = '/me схватывает задержанного за руки и ведёт его за собой&/gotome {arg_id}&/do Задержанный идёт в конвое.',
-            arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'ungotome',
-            description = 'Перестать вести за собой',
-            text = '/me отпускает руки задержанного и перестаёт вести его за собой&/ungotome {arg_id}',
-            arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 't',
-            description = 'Достать тазер',
-            text = '/taser',
-            arg = '',
             enable = true,
             waiting = '3.5'
         }, {
@@ -410,14 +802,14 @@ local commands = {
         }, {
             cmd = 'time',
             description = 'Посмотреть время',
-            text = '/me взглянул{sex} на свои часы с гравировкой MSP One Love и посмотрел{sex} время&/time&/do На часах видно время {get_time}.',
+            text = '/me взглянул{sex} на свои часы с гравировкой Arizona One Love и посмотрел{sex} время&/time&/do На часах видно время {get_time}.',
             arg = '',
             enable = false,
             waiting = '3.5'
         }, {
-            cmd = 'frisk',
-            description = 'Обыск заключённого',
-            text = '/do Перчатки на поясе.&/me схватил перчатки и одел&/do Перчатки одеты.&/me начал нащупывать человека напротив&/frisk {arg_id}',
+            cmd = 'givepass',
+            description = 'Превращение тс в сертификат',
+            text = 'Перед тем, как начать, попрошу полностью опустошить багажник и снять весь тюнинг&А также убедиться, что пробег меньше либо равен 200 км&Если Вы все сделали, то можем приступать&{pause}&Окей, приступаем&/do Бланк для получения сертификата находится под в кармане.&/me засунув руку в карман, взял{sex} бланк, после чего протянул{sex} его человеку напротив&/todo Впишите сюда Ваши данные и поставьте подпись снизу*протягивая лист с ручкой&/givepass {arg_id}',
             arg = '{arg_id}',
             enable = true,
             waiting = '3.5'
@@ -432,38 +824,10 @@ local commands = {
             enable = true,
             waiting = '3.5'
         }, {
-            cmd = 'book',
-            description = 'Выдача игроку трудовой книги',
-            text = 'Оказывается у вас нету трудовой книги, но не переживайте!&Сейчас я вам выдам её, вам не нужно никуда ехать, секунду...&/me достаёт из своего кармана новую трудовую книжку и ставит на ней печать {fraction_tag}&/todo Берите*передавая трудовую книгу челоку напротив&/givewbook {arg_id} 100&/n {get_nick({arg_id})}, примите предложение в /offer чтобы получить трудовую книгу!',
+            cmd = 'frisk',
+            description = 'Обыск заключённого',
+            text = '/do Перчатки на поясе.&/me схватил перчатки и одел&/do Перчатки одеты.&/me начал нащупывать человека напротив&/frisk {arg_id}',
             arg = '{arg_id}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'punishsu',
-            description = 'Повысить уровень наказания.',
-            text = '/me достаёт свой КПК и открывает базу данных преступников&/me вносит изменения в базу данных преступников&/do Преступник занесён в базу данных преступников.&/punish {arg_id} {arg2} 2 {arg3}',
-            arg = '{arg_id} {arg2} {arg3}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'punishclear',
-            description = 'Понизить уровень наказания',
-            text = '/me достаёт блокнот из нагрудного кармана&/do Блокнот в руке.&/me открывает его на странице с записями о поведении заключённых.&/do В блокноте видна запись: "{get_rp_nick({arg_id})}, примерное поведение...&/do ...участие в уборке территории, отсутствие нарушений."&/me берёт ручку и записывает новую информацию о заключённом.&/do В блокноте добавлена запись: "Рекомендация на сокращение срока...&/do ...на {arg2} года за добросовестное выполнение обязанностей."&/me закрывает блокнот и убирает его обратно в карман формы.&/do Данные о заключённом зафиксированы...&/do ...для последующего рассмотрения администрацией.',
-            arg = '{arg_id} {arg2} {arg3}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'carcer',
-            description = 'Посадка в карцер игрока',
-            text = '/do На поясе висит связка ключей.&/me прислонив заключённого к стене, снял ключ со связки, открыл дверцу камеры&/me лёгкими движениями рук затолкнул заключённого в камеру, после чего закрыл её&/me лёгкими движениями рук закрепил ключ к связке&/carcer {arg_id} {arg2} {arg3} {arg4}',
-            arg = '{arg_id} {arg2} {arg3} {arg4}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'setcarcer',
-            description = 'Смена карцера игроку',
-            text = '/do На поясе висит связка ключей.&/me лёгкими движениями рук снял ключ со связки, открыл свободную камеру и камеру заключённого&/me вытолкнул заключённого из первой камеры, затолкнул во вторую, закрыв двери обоих камер&/me лёгкими движениями рук закрепил ключ к связке&/setcarcer {arg_id} {arg2}',
-            arg = '{arg_id}, {arg2}',
             enable = true,
             waiting = '3.5'
         }
@@ -536,20 +900,6 @@ local commands = {
             cmd = 'point',
             description = 'Установить метку для сотрудников',
             text = '/r Срочно выдвигайтесь ко мне, отправляю вам координаты...&/point',
-            arg = '',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'unpunish',
-            description = 'Выпуск заключённых из ТСР',
-            text = '/me лёгкими движениями рук берёт дело заключённого с полки, кладёт его на стол&/do На столе лежит ручка и печать.&/me лёгким движением правой руки берёт ручку, заполняет поле в деле заключённого&/me лёгкими движениями рук кладёт ручку на стол, берёт печать и ставит её в деле&/me лёгкими движениями рук ставит печать на стол, после чего закрывает дело&Ваш срок укорочен, возвращайтесь в камеру и ожидайте ...&... транспортировки до ближайшего населённого пункта.&/unpunish {arg_id} {arg2}',
-            arg = '{arg_id} {arg2}',
-            enable = true,
-            waiting = '3.5'
-        }, {
-            cmd = 'rjailreklama',
-            description = 'Реклама УДО',
-            text = '/rjail Доброго времени суток заключенные.&/rjail В данный момент Вы можете покинуть тюрьму досрочно, через кабинет начальства тюрьмы.&/rjail По УДО будет отказано людям, попавшим сюда по следующим причинам:&/rjail По статьям: 3.5 УК. За любое проявление расизма и национализма, ...&/rjail 5.1 УК. За совершение или планирование терроризма, ...&/rjail 3.1 УК. За похищение гражданина/группы граждан и удержание их в заложниках, ...&/rjail 5.6 УК. За соучастие в захватах, подрывах ...&/rjail ... а также при попадании в тюрьму по решению сената.&/rjail Спасибо за внимание.',
             arg = '',
             enable = true,
             waiting = '3.5'
@@ -1304,6 +1654,8 @@ if not isMonetLoader() then
     end
 end
 ------------------------------------------- Main -----------------------------------------------------
+function load_modules() load_module('rpgun') end
+
 function welcome_message()
     if not sampIsLocalPlayerSpawned() then
         sampAddChatMessage(script_tag ..
@@ -1327,11 +1679,11 @@ function welcome_message()
                                message_color_hex ..
                                getNameKeysFrom(settings.general.bind_mainmenu) ..
                                ' {ffffff}или введите команду ' ..
-                               message_color_hex .. '/ph', message_color)
+                               message_color_hex .. '/gh', message_color)
     else
         sampAddChatMessage(script_tag ..
                                '  {ffffff}Чтоб открыть меню хелпера введите команду ' ..
-                               message_color_hex .. '/ph', message_color)
+                               message_color_hex .. '/gh', message_color)
     end
 end
 
@@ -1690,9 +2042,12 @@ function initialize_commands()
     -- Регистрация всех комнад которые есть в json для 5+
     registerCommandsFrom(commands.commands_senior_staff)
 
-    sampRegisterChatCommand("ph",
+    sampRegisterChatCommand("gh",
                             function() MainWindow[0] = not MainWindow[0] end)
     sampRegisterChatCommand("jm", show_fast_menu)
+    sampRegisterChatCommand("rpguns", function()
+        MODULE.RPWeapon.Window[0] = not MODULE.RPWeapon.Window[0]
+    end)
     sampRegisterChatCommand("stop", function()
         if isActiveCommand then
             command_stop = true
@@ -1711,7 +2066,7 @@ function initialize_commands()
                     SumMenuWindow[0] = true
                 else
                     sampAddChatMessage(script_tag ..
-                                           '  {ffffff}Сначало загрузите/отредактируйте умный регламент повышения срока в /ph',
+                                           '  {ffffff}Сначало загрузите/отредактируйте умный регламент повышения срока в /gh',
                                        message_color)
                     play_error_sound()
                 end
@@ -2388,279 +2743,114 @@ function sampGetPlayerIdByNickname(nick)
     return id
 end
 
-local weapons = {
-    FIST = 0,
-    BRASSKNUCKLES = 1,
-    GOLFCLUB = 2,
-    NIGHTSTICK = 3,
-    KNIFE = 4,
-    BASEBALLBAT = 5,
-    SHOVEL = 6,
-    POOLCUE = 7,
-    KATANA = 8,
-    CHAINSAW = 9,
-    PURPLEDILDO = 10,
-    WHITEDILDO = 11,
-    WHITEVIBRATOR = 12,
-    SILVERVIBRATOR = 13,
-    FLOWERS = 14,
-    CANE = 15,
-    GRENADE = 16,
-    TEARGAS = 17,
-    MOLOTOV = 18,
-    COLT45 = 22,
-    SILENCED = 23,
-    DESERTEAGLE = 24,
-    SHOTGUN = 25,
-    SAWNOFFSHOTGUN = 26,
-    COMBATSHOTGUN = 27,
-    UZI = 28,
-    MP5 = 29,
-    AK47 = 30,
-    M4 = 31,
-    TEC9 = 32,
-    RIFLE = 33,
-    SNIPERRIFLE = 34,
-    ROCKETLAUNCHER = 35,
-    HEATSEEKER = 36,
-    FLAMETHROWER = 37,
-    MINIGUN = 38,
-    SATCHELCHARGE = 39,
-    DETONATOR = 40,
-    SPRAYCAN = 41,
-    FIREEXTINGUISHER = 42,
-    CAMERA = 43,
-    NIGHTVISION = 44,
-    THERMALVISION = 45,
-    PARACHUTE = 46,
-    WEAPON_VEHICLE = 49,
-    HELI = 50,
-    BOMB = 51,
-    COLLISION = 54,
-    -- ARZ CUSTOM GUN
-    DEAGLE_STEEL = 71,
-    DEAGLE_GOLD = 72,
-    GLOCK_GRADIENT = 73,
-    DEAGLE_FLAME = 74,
-    PYTHON_ROYAL = 75,
-    PYTHON_SILVER = 76,
-    AK47_ROSES = 77,
-    AK47_GOLD = 78,
-    M249_GRAFFITI = 79,
-    SAIGA_GOLD = 80,
-    PPSH_STANDART = 81,
-    M249_STANDART = 82,
-    SKORP_STANDART = 83,
-    AKS74_CAMOUFLAGE1 = 84,
-    AK47_CAMOUFLAGE1 = 85,
-    REBECCA_SHOTGUN = 86,
-    OBJ58_PORTALGUN = 87,
-    ICE_SWORD = 88,
-    PORTALGUN = 89,
-    SOUND_GRENADE = 90,
-    EYE_GRENADE = 91,
-    MCMILLIAN_TAC50 = 92,
-    OGLGUN = 93
-}
-local id = weapons
-weapons.names = {
-    [id.FIST] = 'кулаки',
-    [id.BRASSKNUCKLES] = 'кастеты',
-    [id.GOLFCLUB] = 'клюшку для гольфа',
-    [id.NIGHTSTICK] = 'дубинку',
-    [id.KNIFE] = 'острый нож',
-    [id.BASEBALLBAT] = 'биту',
-    [id.SHOVEL] = 'лопату',
-    [id.POOLCUE] = 'кий',
-    [id.KATANA] = 'катану',
-    [id.CHAINSAW] = 'бензопилу',
-    [id.PURPLEDILDO] = 'дидло',
-    [id.WHITEDILDO] = 'дидло',
-    [id.WHITEVIBRATOR] = 'вибратор',
-    [id.SILVERVIBRATOR] = 'вибратор',
-    [id.FLOWERS] = 'букет цветов',
-    [id.CANE] = 'трость',
-    [id.GRENADE] = 'осколочную гранату',
-    [id.TEARGAS] = 'дымовую гранату',
-    [id.MOLOTOV] = 'коктейль Молотова',
-    [id.COLT45] = 'пистолет Colt45',
-    [id.SILENCED] = "электрошокер Taser-X26P",
-    [id.DESERTEAGLE] = 'пистолет Desert Eagle',
-    [id.SHOTGUN] = 'дробовик',
-    [id.SAWNOFFSHOTGUN] = 'обрез',
-    [id.COMBATSHOTGUN] = 'улучшенный обрез',
-    [id.UZI] = 'пистолет-пулемёт Micro Uzi',
-    [id.MP5] = 'пистолет-пулемёт MP5',
-    [id.AK47] = 'автомат AK-47',
-    [id.M4] = 'автомат M4',
-    [id.TEC9] = 'пистолет-пулемёт Tec-9',
-    [id.RIFLE] = 'винтовку Rifle',
-    [id.SNIPERRIFLE] = 'снайперскую винтовку Rifle',
-    [id.ROCKETLAUNCHER] = 'ручную противотанковую ракету',
-    [id.HEATSEEKER] = 'устройство для запуска ракет',
-    [id.FLAMETHROWER] = 'огнемёт',
-    [id.MINIGUN] = 'миниган',
-    [id.SATCHELCHARGE] = 'динамит',
-    [id.DETONATOR] = 'детонатор',
-    [id.SPRAYCAN] = 'перцовый баланчик',
-    [id.FIREEXTINGUISHER] = 'огнетушитель',
-    [id.CAMERA] = 'фотоапарат Canon',
-    [id.NIGHTVISION] = 'прибор ночного видения',
-    [id.THERMALVISION] = 'тепловизор',
-    [id.PARACHUTE] = 'ручной парашут',
-    [id.WEAPON_VEHICLE] = 'автомобиль',
-    [id.HELI] = 'лопасти вертолёта',
-    [id.BOMB] = 'взрыв',
-    [id.COLLISION] = 'коллизию',
-    -- ARZ LAUNCHER GUNS
-    [id.DEAGLE_STEEL] = 'пистолет Desert Eagle Steel',
-    [id.DEAGLE_GOLD] = 'пистолет Desert Eagle Gold',
-    [id.GLOCK_GRADIENT] = 'пистолет Glock',
-    [id.DEAGLE_FLAME] = 'пистолет Desert Eagle Flame',
-    [id.PYTHON_ROYAL] = 'пистолет Colt Python',
-    [id.PYTHON_SILVER] = 'пистолет Colt Python Silver',
-    [id.AK47_ROSES] = 'автомат AK-47 Roses',
-    [id.AK47_GOLD] = 'автомат AK-47 Gold',
-    [id.M249_GRAFFITI] = 'пулемёт M249 Graffiti',
-    [id.SAIGA_GOLD] = 'золотую Сайгу',
-    [id.PPSH_STANDART] = 'пистолет-пулемёт Standart',
-    [id.M249_STANDART] = 'пулемёт M249',
-    [id.SKORP_STANDART] = 'пистолет-пулемёт Skorp',
-    [id.AKS74_CAMOUFLAGE1] = 'автомат AKS-74 камуфляжный',
-    [id.AK47_CAMOUFLAGE1] = 'автомат AK-47 камуфляжный',
-    [id.REBECCA_SHOTGUN] = 'дробовик Rebecca',
-    [id.OBJ58_PORTALGUN] = 'портальную пушку',
-    [id.PORTALGUN] = 'портальную пушку',
-    [id.ICE_SWORD] = 'ледяной меч',
-    [id.SOUND_GRENADE] = 'оглушающую граната',
-    [id.EYE_GRENADE] = 'ослепляющую граната',
-    [id.MCMILLIAN_TAC50] = 'снайперскую винтовку McMillian TAC-50',
-    [id.OGLGUN] = 'оглушающий пистолет'
-}
-function weapons.get_name(id) return weapons.names[id] end
-
-local gunOn = {}
-local gunOff = {}
-local gunPartOn = {}
-local gunPartOff = {}
-local oldGun = nil
-local nowGun = 0
-local rpTakeNames = {
-    {"из-за спины", "за спину"},
-    {"из кармана", "в карман"},
-    {"из пояса", "на пояс"},
-    {"из кобуры", "в кобуру"}
-}
-local rpTake = {
-    [2] = 1,
-    [5] = 1,
-    [6] = 1,
-    [7] = 1,
-    [8] = 1,
-    [9] = 1,
-    [14] = 1,
-    [15] = 1,
-    [25] = 1,
-    [26] = 1,
-    [27] = 1,
-    [28] = 1,
-    [29] = 1,
-    [30] = 1,
-    [31] = 1,
-    [32] = 1,
-    [33] = 1,
-    [34] = 1,
-    [35] = 1,
-    [36] = 1,
-    [37] = 1,
-    [38] = 1,
-    [42] = 1,
-    [77] = 1,
-    [78] = 1,
-    [78] = 1,
-    [79] = 1,
-    [80] = 1,
-    [81] = 1,
-    [82] = 1,
-    [83] = 1,
-    [84] = 1,
-    [85] = 1,
-    [86] = 1,
-    [92] = 1,
-    [87] = 1,
-    [88] = 1,
-    [49] = 1,
-    [50] = 1,
-    [51] = 1,
-    [54] = 1, -- спина
-    [1] = 2,
-    [4] = 2,
-    [10] = 2,
-    [11] = 2,
-    [12] = 2,
-    [13] = 2,
-    [41] = 2,
-    [43] = 2,
-    [44] = 2,
-    [45] = 2,
-    [46] = 2, -- карман
-    [16] = 3,
-    [17] = 3,
-    [18] = 3,
-    [39] = 3,
-    [40] = 3,
-    [90] = 3,
-    [91] = 3,
-    [3] = 3, -- пояс
-    [22] = 4,
-    [23] = 4,
-    [24] = 4,
-    [71] = 4,
-    [72] = 4,
-    [73] = 4,
-    [74] = 4,
-    [75] = 4,
-    [76] = 4,
-    [89] = 4, -- кобура
-    [93] = 4
-}
-for id, weapon in pairs(weapons.names) do
-    if (id == 3 or (id > 15 and id < 19) or (id == 90 or id == 91)) then -- 3 16 17 18 (for gunOn)
-        if settings.player_info.sex == "Мужчина" or
-            settings.player_info.sex then
-            gunOn[id] = 'снял'
-        elseif settings.player_info.sex == "Женщина" then
-            gunOn[id] = 'снялa'
+-------------------------------------------- RP GUNS INIT ----------------------------------------
+function initialize_guns()
+    for i, weapon in pairs(modules.rpgun.data.rp_guns) do
+        local rpTakeType = modules.rpgun.data.rpTakeNames[weapon.rpTake]
+        local id = weapon.id
+        modules.rpgun.data.gunActions.partOn[id] = rpTakeType[1]
+        modules.rpgun.data.gunActions.partOff[id] = rpTakeType[2]
+        if id == 3 or (id > 15 and id < 19) or (id == 90 or id == 91) then
+            modules.rpgun.data.gunActions.on[id] =
+                (settings.player_info.sex == "Женщина") and "сняла" or
+                    "снял"
+        else
+            modules.rpgun.data.gunActions.on[id] =
+                (settings.player_info.sex == "Женщина") and
+                    "достала" or "достал"
         end
-    else
-        if settings.player_info.sex == "Мужчина" or
-            settings.player_info.sex == "Неизвестно" then
-            gunOn[id] = 'достал'
-        elseif settings.player_info.sex == "Женщина" then
-            gunOn[id] = 'досталa'
+        if id == 3 or (id > 15 and id < 19) or (id > 38 and id < 41) or
+            (id == 90 or id == 91) then
+            modules.rpgun.data.gunActions.off[id] =
+                (settings.player_info.sex == "Женщина") and
+                    "повесила" or "повесил"
+        else
+            modules.rpgun.data.gunActions.off[id] =
+                (settings.player_info.sex == "Женщина") and
+                    "убрала" or "убрал"
         end
-    end
-    if (id == 3 or (id > 15 and id < 19) or (id > 38 and id < 41) or
-        (id == 90 or id == 91)) then -- 3 16 17 18 39 40 (for gunOff)
-        if settings.player_info.sex == "Мужчина" or
-            settings.player_info.sex == "Неизвестно" then
-            gunOff[id] = 'повесил'
-        elseif settings.player_info.sex == "Женщина" then
-            gunOff[id] = 'повесилa'
-        end
-    else
-        if settings.player_info.sex == "Мужчина" or
-            settings.player_info.sex == "Неизвестно" then
-            gunOff[id] = 'убрал'
-        elseif settings.player_info.sex == "Женщина" then
-            gunOff[id] = 'убралa'
-        end
-    end
-    if id > 0 then
-        gunPartOn[id] = rpTakeNames[rpTake[id]][1]
-        gunPartOff[id] = rpTakeNames[rpTake[id]][2]
     end
 end
+function get_name_weapon(id)
+    for _, weapon in ipairs(modules.rpgun.data.rp_guns) do
+        if weapon.id == id then return weapon.name end
+    end
+    return "оружие"
+end
+function isExistsWeapon(id)
+    for _, weapon in ipairs(modules.rpgun.data.rp_guns) do
+        if weapon.id == id then return true end
+    end
+    return false
+end
+function isEnableWeapon(id)
+    for _, weapon in ipairs(modules.rpgun.data.rp_guns) do
+        if weapon.id == id then return weapon.enable end
+    end
+    return false
+end
+function handleNewWeapon(weaponId)
+    sampAddChatMessage(
+        '[Goverment Helper] {ffffff}Обнаружено новое оружие с ID ' ..
+            message_color_hex .. weaponId ..
+            '{ffffff}, даю ему имя "оружие" и расположение "спина".',
+        message_color)
+    sampAddChatMessage(
+        '[Goverment Helper] {ffffff}Изменить имя или расположение оружия вы можете в /helper - Главное меню - Режим RP отыгровки оружия - Настроить',
+        message_color)
+    table.insert(modules.rpgun.data.rp_guns, {
+        id = weaponId,
+        name = "оружие",
+        enable = true,
+        rpTake = 1
+    })
+    save_module('rpgun')
+    initialize_guns()
+end
+function processWeaponChange(oldGun, nowGun)
+    if not modules.rpgun.data.gunActions.off[oldGun] or
+        not modules.rpgun.data.gunActions.on[nowGun] then
+        sampAddChatMessage(
+            '[Goverment Helper | Ассистент] {ffffff}Инициализация оружия...',
+            message_color)
+        initialize_guns()
+        return
+    end
+    local actions = modules.rpgun.data.gunActions
+    if oldGun == 0 and nowGun == 0 then
+        return
+    elseif oldGun == 0 and not isEnableWeapon(nowGun) then
+        return
+    elseif nowGun == 0 and not isEnableWeapon(oldGun) then
+        return
+    elseif not isEnableWeapon(oldGun) and isEnableWeapon(nowGun) then
+        sampSendChat(string.format("/me %s %s %s", actions.on[nowGun],
+                                   get_name_weapon(nowGun),
+                                   actions.partOn[nowGun]))
+    elseif isEnableWeapon(oldGun) and not isEnableWeapon(nowGun) then
+        sampSendChat(string.format("/me %s %s %s", actions.off[oldGun],
+                                   get_name_weapon(oldGun),
+                                   actions.partOff[oldGun]))
+    elseif oldGun == 0 then
+        sampSendChat(string.format("/me %s %s %s", actions.on[nowGun],
+                                   get_name_weapon(nowGun),
+                                   actions.partOn[nowGun]))
+    elseif nowGun == 0 then
+        sampSendChat(string.format("/me %s %s %s", actions.off[oldGun],
+                                   get_name_weapon(oldGun),
+                                   actions.partOff[oldGun]))
+    else
+        if isEnableWeapon(oldGun) and isEnableWeapon(nowGun) then
+            sampSendChat(string.format(
+                             "/me %s %s %s, после чего %s %s %s",
+                             actions.off[oldGun], get_name_weapon(oldGun),
+                             actions.partOff[oldGun], actions.on[nowGun],
+                             get_name_weapon(nowGun), actions.partOn[nowGun]))
+        end
+
+    end
+end
+
 function getNameOfARZVehicleModel(id)
     if doesFileExist(path_arzvehicles) then
         if #arzvehicles ~= 0 then
@@ -3984,6 +4174,8 @@ function getARZServerName(number)
     return server
 end
 
+function change_dpi() imgui.PushFont(MODULE.FONT) end
+
 function check_update()
     print(script_tag ..
               '  Начинаю проверку на наличие обновлений...')
@@ -4267,18 +4459,26 @@ function sampev.onDisplayGameText(style, time, text)
 end
 
 function sampev.onSendTakeDamage(playerId, damage, weapon)
+    if (debug_mode) then
+        sampAddChatMessage('[TakeDamage] {ffffff}ID ' .. playerId ..
+                               " | Damage " .. damage .. " | Weapon " .. weapon,
+                           message_color)
+        print('[TakeDamage] ID ' .. playerId .. " | Damage " .. damage ..
+                  " | Weapon " .. weapon)
+    end
     if playerId ~= 65535 then
         playerId2 = playerId1
         playerId1 = playerId
         if isParamSampID(playerId) and playerId1 ~= playerId2 and
             tonumber(playerId) ~= 0 and weapon then
-            local weapon_name = weapons.get_name(weapon)
+            local weapon_name = get_name_weapon(weapon)
             if weapon_name then
-                sampAddChatMessage(script_tag .. '  {ffffff}Игрок ' ..
+                sampAddChatMessage('[Goverment Helper] {ffffff}Игрок ' ..
                                        sampGetPlayerNickname(playerId) .. '[' ..
                                        playerId ..
                                        '] напал на вас используя ' ..
-                                       weapon_name .. '.', message_color)
+                                       weapon_name .. '[' .. weapon .. ']!',
+                                   message_color)
             end
         end
     end
@@ -4406,42 +4606,6 @@ function sampev.onServerMessage(color, text)
         sampSendChat("/r " .. TranslateNick(PlayerName) ..
                          " - наш новый сотрудник!")
     end
-    if (text:find(
-        "У (.+) отсутствует трудовая книжка. Вы можете выдать ему книжку с помощью команды /givewbook") and
-        tonumber(settings.player_info.fraction_rank_number) >= 6) then
-        local nick = text:match(
-                         "У (.+) отсутствует трудовая книжка. Вы можете выдать ему книжку с помощью команды /givewbook")
-        local cmd = '/givewbook'
-        for _, command in ipairs(commands.commands_manage) do
-            if command.enable and command.text:find('/givewbook {arg_id}') then
-                cmd = '/' .. command.cmd
-            end
-        end
-        sampAddChatMessage(
-            script_tag .. '  {ffffff}У игрока ' .. nick ..
-                ' нету трудовой книжки, выдайте её используя ' ..
-                message_color_hex .. cmd .. ' ' ..
-                sampGetPlayerIdByNickname(nick), message_color)
-        return false
-    end
-    if (settings.general.auto_doklad) then
-        if text:find(
-            'Вы успешно начали патрулирование {ff6666}поста: (.+){ffffff}.') then
-            local postnazvanie = text:match(
-                                     'Вы успешно начали патрулирование {ff6666}поста: (.+){ffffff}.')
-            imgui.StrCopy(post, postnazvanie)
-        end
-
-        if text:find(
-            '%[Патрулирование%] {ffffff}Доложите о {ff6666}начале выполнения маршрута в рацию %(/r%){ffffff}, чтобы продолжить.') then
-            local postStr = ffi.string(post)
-            sampSendChat('/r Докладывает ' ..
-                             settings.player_info.fraction_rank .. ': ' ..
-                             settings.player_info.name_surname .. '. Пост: ' ..
-                             postStr .. '. Состояние: ' ..
-                             settings.general.post_status .. '')
-        end
-    end
     if (settings.general.auto_mask) then
         if text:find(
             'Время действия маски истекло, вам пришлось ее выбросить.') then
@@ -4515,33 +4679,6 @@ function sampev.onServerMessage(color, text)
         sampAddChatMessage(
             script_tag .. '  {ffffff}Вы сняли маску!', message_color)
         return false
-    end
-    if text:find(
-        "Вы уже изготовили: {DC4747}(%d+){FFFFFF} материалов") then
-        materialsGeneral = settings.player_organization_general.materials + 1
-        materialsNow = settings.player_organization_now.materials + 1 -- Прибавляем 1 материал
-
-        settings.player_organization_general.materials = materialsGeneral
-        settings.player_organization_now.materials = materialsNow
-        save_settings()
-        return true
-    end
-    local clean_text = text:gsub("{.-}", ""):gsub("^%s+", ""):gsub("%s+$", "")
-
-    -- Проверяем совпадение
-    if clean_text:find(
-        "За доставку 10%-ти ящиков вы получаете 1 пропуск в тир%.") then
-        postavkiMaterialsGeneral = settings.player_organization_general
-                                       .postavki_materials + 1
-        postavkiMaterialsNow = settings.player_organization_now
-                                   .postavki_materials + 1
-
-        settings.player_organization_general.postavki_materials =
-            postavkiMaterialsGeneral
-        settings.player_organization_now.postavki_materials =
-            postavkiMaterialsNow
-        save_settings()
-        return true
     end
     if (text:find('Flip_Anderson%[%d+%]') and getARZServerNumber():find('28')) or
         text:find('%[28%]Flip_Anderson') then
@@ -4697,6 +4834,9 @@ function sampev.onShowDialog(dialogid, style, title, button1, button2, text)
                 elseif settings.player_info.fraction == 'Армия ЛС' or
                     settings.player_info.fraction == 'Армия LS' then
                     settings.player_info.fraction_tag = 'ЛСа'
+                elseif settings.player_info.fraction:find(
+                    'Правительство LS') then
+                    settings.player_info.fraction_tag = 'Пра-во'
                 else
                     settings.player_info.fraction_tag = 'MSP'
                 end
@@ -4740,68 +4880,6 @@ function sampev.onShowDialog(dialogid, style, title, button1, button2, text)
         sampSendDialogResponse(235, 0, 0, 0)
         check_stats = false
         return false
-    end
-
-    if title:find('Успеваемость') and check_jobs then -- получение рабочей статистики
-        if text:find(
-            "2%) Сделанных патронов на складе: {FFB323}(%d+){FFFFFF}") then
-            settings.player_organization_general.materials = text:match(
-                                                                 "2%) Сделанных патронов на складе: {FFB323}(%d+){FFFFFF}")
-        end
-        if text:find(
-            "3%) Доставленных в ПД фур: {FFB323}(%d+){FFFFFF}") then
-            settings.player_organization_general.postavki_materials =
-                text:match(
-                    "3%) Доставленных в ПД фур: {FFB323}(%d+){FFFFFF}")
-        end
-        if text:find(
-            "5%) Доставленных вертолётов с материалами: {FFB323}(%d+){FFFFFF}") then
-            settings.player_organization_general.postavki_kargobob = text:match(
-                                                                         "5%) Доставленных вертолётов с материалами: {FFB323}(%d+){FFFFFF}")
-        end
-        -- Извлекаем данные после "Статистика успеваемости за сегодня:"
-        local start_pos, end_pos = text:find(
-                                       "Статистика успеваемости за сегодня:")
-
-        if start_pos then
-            -- Получаем подстроку после подзаголовка
-            local today_stats = text:sub(end_pos + 1)
-
-            -- Извлекаем данные по каждому из пунктов
-            local materials = today_stats:match(
-                                  "2%) Сделанных патронов на складе: {F9FF23}(%d+){FFFFFF}")
-            local trucks = today_stats:match(
-                               "3%) Доставленных в ПД фур: {F9FF23}(%d+){FFFFFF}")
-            local helicopters = today_stats:match(
-                                    "5%) Доставленных вертолётов с материалами: {F9FF23}(%d+){FFFFFF}")
-
-            -- Сохраняем в настройки, если значения найдены
-            if materials then
-                settings.player_organization_now.materials = materials
-            end
-            if trucks then
-                settings.player_organization_now.postavki_materials = trucks
-            end
-            if helicopters then
-                settings.player_organization_now.postavki_kargobob = helicopters
-            end
-        end
-        save_settings()
-        sampSendDialogResponse(0, 0, 0, 0)
-        check_jobs = false
-        return false
-    end
-
-    if string.find(text,
-                   "Вы успешно доставили груз с ингредиентами") then
-        -- Увеличиваем значения доставок
-        settings.player_organization_general.postavki_kargobob =
-            settings.player_organization_general.postavki_kargobob + 1
-        settings.player_organization_now.postavki_kargobob =
-            settings.player_organization_now.postavki_kargobob + 1
-        -- Сохраняем настройки
-        save_settings()
-        return true
     end
 
     if spawncar_bool and title:find('$') and
@@ -4949,59 +5027,6 @@ function sampev.onShowDialog(dialogid, style, title, button1, button2, text)
     end
 end
 
--- function onReceivePacket(id, bs)
--- 	if isMonetLoader() then
--- 		if id == 220 then
--- 			local id = raknetBitStreamReadInt8(bs)
--- 			local _1 = raknetBitStreamReadInt8(bs)
--- 			local _2 = raknetBitStreamReadInt16(bs)
--- 			local _3 = raknetBitStreamReadInt32(bs)
--- 			-- автоматический клик для МОБАЙЛ "Крушение самолета" и "Авария на шосе" (взято из кода XRLM)
--- 			if _3 > 2 and _3 <= raknetBitStreamGetNumberOfUnreadBits(bs) then
--- 				local _4 = raknetBitStreamReadString(bs, _3)
--- 				if _4:find('{"progress":%d+,"text":"Для взаимодействия, нажимайте на кнопку посередине"}') and settings.general.auto_clicker_situation then
--- 					clicked = true
--- 				end
--- 			end
--- 		end
--- 	else
--- 		if id == 220 then
--- 			raknetBitStreamIgnoreBits(bs, 8)
--- 			if raknetBitStreamReadInt8(bs) == 17 then
--- 				raknetBitStreamIgnoreBits(bs, 32)
--- 				local cmd2 = raknetBitStreamReadString(bs, raknetBitStreamReadInt32(bs))
--- 				-- автоматический клик для ПК "Крушение самолета" и "Авария на шосе" (взято из кода Chapo)
--- 				local view = string.match(cmd2,
--- 					"^window.executeEvent%('event%.setActiveView', [`']%[[\"%s]?(.-)[\"%s]?%][`']%);$")
--- 				if view ~= nil and settings.general.auto_clicker_situation then
--- 					clicked = (view == "Clicker")
--- 				end
-
--- 				if cmd2:find('Основная статистика') and check_stats then -- /jme
--- 					sampAddChatMessage(script_tag .. '  {ffffff}Ошибка, не могу получить данные из нового CEF диалога!',
--- 						message_color)
--- 					sampAddChatMessage(
--- 						script_tag ..
--- 						'  {ffffff}Включите старый (класичесский) вид диалогов в /settings - Кастомизация интерфейса',
--- 						message_color)
--- 					run_code("window.executeEvent('cef.modals.closeModal', `[\"dialog\"]`);")
--- 				end
--- 			end
--- 		end
--- 	end
--- end
-
--- function onSendPacket(id, bs)
--- 	if id == 220 and isMonetLoader() then
--- 		local id = raknetBitStreamReadInt8(bs)
--- 		local _1 = raknetBitStreamReadInt8(bs)
--- 		local _2 = raknetBitStreamReadInt8(bs)
--- 		if _1 == 66 and (_2 == 25 or _2 == 8) and settings.general.auto_clicker_situation then
--- 			clicked = false
--- 		end
--- 	end
--- end
-
 imgui.OnInitialize(function()
     imgui.GetIO().IniFilename = ni
     fa.Init(14 * MONET_DPI_SCALE)
@@ -5015,14 +5040,14 @@ end)
 imgui.OnFrame(function() return MainWindow[0] end, function(player)
     imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2),
                            imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-    imgui.SetNextWindowSize(imgui.ImVec2(700 * MONET_DPI_SCALE,
+    imgui.SetNextWindowSize(imgui.ImVec2(630 * MONET_DPI_SCALE,
                                          436 * MONET_DPI_SCALE),
                             imgui.Cond.FirstUseEver) -- Размеры всего окна скрипта
     imgui.Begin(fa.BUILDING_SHIELD .. " Goverment Helper##main", MainWindow,
                 imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize)
     if imgui.BeginTabBar('пон') then
         if imgui.BeginTabItem(fa.HOUSE .. u8 ' Главное меню') then
-            if imgui.BeginChild('##1', imgui.ImVec2(690 * MONET_DPI_SCALE,
+            if imgui.BeginChild('##1', imgui.ImVec2(620 * MONET_DPI_SCALE,
                                                     168 * MONET_DPI_SCALE), true) then -- Размеры первой вкладки
                 imgui.CenterText(fa.USER_NURSE ..
                                      u8 ' Информация про сотрудника')
@@ -5032,7 +5057,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                 imgui.SetColumnWidth(-1, 280 * MONET_DPI_SCALE) -- Длина первого столбца
                 imgui.NextColumn()
                 imgui.CenterColumnText(u8(settings.player_info.name_surname))
-                imgui.SetColumnWidth(-1, 300 * MONET_DPI_SCALE) -- Длина второго столбца
+                imgui.SetColumnWidth(-1, 230 * MONET_DPI_SCALE) -- Длина второго столбца
                 imgui.NextColumn()
                 if imgui.CenterColumnSmallButton(
                     u8 'Изменить##name_surname') then
@@ -5205,14 +5230,14 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
 
                 imgui.EndChild()
             end
-            if imgui.BeginChild('##2', imgui.ImVec2(690 * MONET_DPI_SCALE,
+            if imgui.BeginChild('##2', imgui.ImVec2(620 * MONET_DPI_SCALE,
                                                     50 * MONET_DPI_SCALE), true) then
                 imgui.CenterText(fa.ROBOT .. u8 ' Ассистент')
                 imgui.Separator()
                 imgui.Columns(2)
                 imgui.CenterColumnText(u8(
                                            "Ваш незаменимый помощник для автоматизации некоторых действий"))
-                imgui.SetColumnWidth(-1, 580 * MONET_DPI_SCALE)
+                imgui.SetColumnWidth(-1, 510 * MONET_DPI_SCALE)
                 imgui.NextColumn()
                 if imgui.CenterColumnSmallButton(u8 'Управление') then
                     imgui.OpenPopup(fa.ROBOT ..
@@ -5251,11 +5276,11 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                     end
                     imgui.EndPopup()
                 end
-                imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE)
+                imgui.SetColumnWidth(-1, 110 * MONET_DPI_SCALE)
                 imgui.Columns(1)
                 imgui.EndChild()
             end
-            if imgui.BeginChild('##3', imgui.ImVec2(690 * MONET_DPI_SCALE,
+            if imgui.BeginChild('##3', imgui.ImVec2(620 * MONET_DPI_SCALE,
                                                     144 * MONET_DPI_SCALE), true) then -- Размеры окна "Дополнительные функции хелпера"
                 imgui.CenterText(fa.SITEMAP ..
                                      u8 ' Дополнительные функции хелпера')
@@ -5276,7 +5301,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                 else
                     imgui.CenterColumnText(u8 'Отключено')
                 end
-                imgui.SetColumnWidth(-1, 300 * MONET_DPI_SCALE) -- Длина описание пункта
+                imgui.SetColumnWidth(-1, 230 * MONET_DPI_SCALE) -- Длина описание пункта
                 imgui.NextColumn()
                 if settings.general.use_info_menu then
                     if imgui.CenterColumnSmallButton(
@@ -5439,11 +5464,11 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                 if imgui.BeginTabItem(fa.BARS ..
                                           u8 ' Общие команды для всех рангов ') then
                     if imgui.BeginChild('##1', imgui.ImVec2(
-                                            689 * MONET_DPI_SCALE,
+                                            619 * MONET_DPI_SCALE,
                                             312 * MONET_DPI_SCALE), true) then -- Размеры вкладки "Команды и отыгровки"
                         imgui.Columns(3)
                         imgui.CenterColumnText(u8 "Команда")
-                        imgui.SetColumnWidth(-1, 200 * MONET_DPI_SCALE) -- Размеры первого пункта второй вкладки
+                        imgui.SetColumnWidth(-1, 130 * MONET_DPI_SCALE) -- Размеры первого пункта второй вкладки
                         imgui.NextColumn()
                         imgui.CenterColumnText(u8 "Описание")
                         imgui.SetColumnWidth(-1, 370 * MONET_DPI_SCALE) -- Размеры второго пункта второй вкладки
@@ -5453,7 +5478,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                         imgui.Columns(1)
                         imgui.Separator()
                         imgui.Columns(3)
-                        imgui.CenterColumnText(u8 "/ph")
+                        imgui.CenterColumnText(u8 "/gh")
                         imgui.NextColumn()
                         imgui.CenterColumnText(
                             u8 "Открыть главное меню хелпера")
@@ -5650,7 +5675,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                         tonumber(settings.player_info.fraction_rank_number) ==
                         10 then
                         if imgui.BeginChild('##1', imgui.ImVec2(
-                                                690 * MONET_DPI_SCALE,
+                                                620 * MONET_DPI_SCALE,
                                                 312 * MONET_DPI_SCALE), true) then -- Размеры вкладки "Команды для 5+"
                             imgui.Columns(3)
                             imgui.CenterColumnText(u8 "Команда")
@@ -5858,7 +5883,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                         tonumber(settings.player_info.fraction_rank_number) ==
                         10 then
                         if imgui.BeginChild('##1', imgui.ImVec2(
-                                                689 * MONET_DPI_SCALE,
+                                                619 * MONET_DPI_SCALE,
                                                 312 * MONET_DPI_SCALE), true) then -- Размеры окна
                             imgui.Columns(3)
                             imgui.CenterColumnText(u8 "Команда")
@@ -6082,7 +6107,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                 if imgui.BeginTabItem(fa.BARS ..
                                           u8 ' Дополнительные функции') then
                     if imgui.BeginChild('##99', imgui.ImVec2(
-                                            689 * MONET_DPI_SCALE,
+                                            619 * MONET_DPI_SCALE,
                                             342 * MONET_DPI_SCALE), true) then
                         if isMonetLoader() then
                             imgui.CenterText(
@@ -6179,7 +6204,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                                     hotkey_no_errors then
                                     imgui.Separator()
                                     imgui.CenterText(
-                                        u8 'Открытие главного меню хелпера (аналог /ph):')
+                                        u8 'Открытие главного меню хелпера (аналог /gh):')
                                     local width = imgui.GetWindowWidth()
                                     local calc = imgui.CalcTextSize(
                                                      getNameKeysFrom(
@@ -6264,224 +6289,12 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             imgui.EndTabItem()
         end
         if imgui.BeginTabItem(fa.PLAY .. u8 ' Функции') then
-            if imgui.BeginChild('##1', imgui.ImVec2(689 * MONET_DPI_SCALE,
+            if imgui.BeginChild('##1', imgui.ImVec2(619 * MONET_DPI_SCALE,
                                                     195 * MONET_DPI_SCALE), true) then -- Размеры первой вкладки
                 imgui.CenterText(fa.USER_NURSE ..
                                      u8 ' Настройки работы')
                 imgui.Separator()
                 imgui.Columns(3)
-                imgui.CenterColumnText(
-                    u8 "Информация о количестве работы")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "Отображение на экране менюшки с информацией о проделанной работе за всё время.")
-                end
-                imgui.SetColumnWidth(-1, 280 * MONET_DPI_SCALE) -- Длина названия пункта
-                imgui.NextColumn()
-                if settings.player_organization_general.use_infojob_menu then
-                    imgui.CenterColumnText(u8 'Включено')
-                else
-                    imgui.CenterColumnText(u8 'Отключено')
-                end
-                imgui.SetColumnWidth(-1, 300 * MONET_DPI_SCALE) -- Длина описание пункта
-                imgui.NextColumn()
-                if settings.player_organization_general.use_infojob_menu then
-                    if imgui.CenterColumnSmallButton(
-                        u8 'Отключить##info_job_general') then
-                        settings.player_organization_general.use_infojob_menu =
-                            false
-                        JobInformationGeneralWindow[0] = false
-                        save_settings()
-                    end
-                else
-                    if imgui.CenterColumnSmallButton(
-                        u8 'Включить##info_job_general') then
-                        settings.player_organization_general.use_infojob_menu =
-                            true
-                        JobInformationGeneralWindow[0] = true
-                        save_settings()
-                    end
-                end
-                imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE) -- Размер кнопки
-                imgui.Columns(1)
-                imgui.Separator()
-                imgui.Columns(3)
-                imgui.CenterColumnText(
-                    u8 "Информация о работе за всё время")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "Отображение на экране менюшки с информацией о проделанной работе за всё время")
-                end
-                imgui.SetColumnWidth(-1, 280 * MONET_DPI_SCALE) -- Длина названия пункта
-                imgui.NextColumn()
-                if settings.player_organization_now.use_infojob_menu then
-                    imgui.CenterColumnText(u8 'Включено')
-                else
-                    imgui.CenterColumnText(u8 'Отключено')
-                end
-                imgui.SetColumnWidth(-1, 300 * MONET_DPI_SCALE) -- Длина описание пункта
-                imgui.NextColumn()
-                if settings.player_organization_now.use_infojob_menu then
-                    if imgui.CenterColumnSmallButton(
-                        u8 'Отключить##info_job_now') then
-                        settings.player_organization_now.use_infojob_menu =
-                            false
-                        JobInformationNowWindow[0] = false
-                        save_settings()
-                    end
-                else
-                    if imgui.CenterColumnSmallButton(
-                        u8 'Включить##info_job_now') then
-                        settings.player_organization_now.use_infojob_menu = true
-                        JobInformationNowWindow[0] = true
-                        save_settings()
-                    end
-                end
-                imgui.SetColumnWidth(-1, 100 * MONET_DPI_SCALE) -- Размер кнопки
-                imgui.Columns(1)
-                imgui.Separator()
-                imgui.Columns(3)
-                imgui.CenterColumnText(u8 "Состояние поста:")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "Состояние поста в автодоклад(/r).")
-                end
-                imgui.SetColumnWidth(-1, 280 * MONET_DPI_SCALE) -- Длина первого столбца
-                imgui.NextColumn()
-                if checkbox_accent_enable[0] then
-                    imgui.CenterColumnText(u8(settings.general.post_status))
-                end
-                imgui.NextColumn()
-                if imgui.CenterColumnSmallButton(
-                    u8 'Изменить##post_status') then
-                    imgui.OpenPopup(fa.BUILDING_SHIELD ..
-                                        u8 ' Состояние поста##post_status')
-                end
-                imgui.SetColumnWidth(-1, 300 * MONET_DPI_SCALE) -- Длина второго столбца
-                if imgui.BeginPopupModal(
-                    fa.BUILDING_SHIELD ..
-                        u8 ' Состояние поста##post_status', _,
-                    imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize) then
-                    imgui.PushItemWidth(405 * MONET_DPI_SCALE)
-                    imgui.InputText(u8 '##input_post_status', input_post_status,
-                                    256)
-                    imgui.Separator()
-                    if imgui.Button(fa.CIRCLE_XMARK .. u8 ' Отмена',
-                                    imgui.ImVec2(200 * MONET_DPI_SCALE,
-                                                 25 * MONET_DPI_SCALE)) then
-                        imgui.CloseCurrentPopup()
-                    end
-                    imgui.SameLine()
-                    if imgui.Button(fa.FLOPPY_DISK .. u8 ' Сохранить',
-                                    imgui.ImVec2(200 * MONET_DPI_SCALE,
-                                                 25 * MONET_DPI_SCALE)) then
-                        settings.general.post_status =
-                            u8:decode(ffi.string(input_post_status))
-                        save_settings()
-                        imgui.CloseCurrentPopup()
-                    end
-                    imgui.End()
-                end
-                imgui.Columns(1)
-                imgui.Separator()
-                imgui.Columns(3)
-                imgui.CenterColumnText(u8 "Режим автодоклада")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "Вставая на пост будет происходить автоматически доклад в рацию организации(/r).")
-                end
-                imgui.NextColumn()
-                if settings.general.auto_doklad then
-                    imgui.CenterColumnText(u8 'Включено')
-                else
-                    imgui.CenterColumnText(u8 'Отключено')
-                end
-                imgui.NextColumn()
-                if settings.general.auto_doklad then
-                    if imgui.CenterColumnSmallButton(
-                        u8 'Отключить##auto_doklad') then
-                        settings.general.auto_doklad = false
-                        save_settings()
-                    end
-                else
-                    if imgui.CenterColumnSmallButton(
-                        u8 'Включить##auto_doklad') then
-                        settings.general.auto_doklad = true
-                        save_settings()
-                    end
-                end
-                imgui.Columns(1)
-                imgui.Separator()
-                imgui.Columns(3)
-                imgui.CenterColumnText(
-                    u8 "Количество созданных патронов:")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "За всё время количество изготовленных материалов.")
-                end
-                imgui.NextColumn()
-                imgui.CenterColumnText(tostring(
-                                           settings.player_organization_general
-                                               .materials))
-                imgui.NextColumn()
-                if imgui.CenterColumnSmallButton(
-                    u8 "Обновить##materials") then
-                    check_jobs = true
-                    sampSendChat('/jobprogress')
-                end
-                imgui.Columns(1)
-                imgui.Separator()
-                imgui.Columns(3)
-                imgui.CenterColumnText(
-                    u8 "Количество поставок в МЮ:")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "Статистика выполненных поставок на фуре в МЮ.")
-                end
-                imgui.NextColumn()
-                imgui.CenterColumnText(tostring(
-                                           settings.player_organization_general
-                                               .postavki_materials))
-                imgui.NextColumn()
-                if imgui.CenterColumnSmallButton(
-                    u8 "Обновить##postavki_materials") then
-                    check_jobs = true
-                    sampSendChat('/jobprogress')
-                end
-                imgui.Columns(1)
-                imgui.Separator()
-                imgui.Columns(3)
-                imgui.CenterColumnText(
-                    u8 "Количество поставок ингредиентов:")
-                imgui.SameLine(nil, 5)
-                imgui.TextDisabled("[?]")
-                if imgui.IsItemHovered() then
-                    imgui.SetTooltip(
-                        u8 "Статистика выполненных поставок на каргобобе в МО и ТСР.")
-                end
-                imgui.NextColumn()
-                imgui.CenterColumnText(tostring(
-                                           settings.player_organization_general
-                                               .postavki_kargobob))
-                imgui.NextColumn()
-                if imgui.CenterColumnSmallButton(
-                    u8 "Обновить##postavki_kargobob") then
-                    check_jobs = true
-                    sampSendChat('/jobprogress')
-                end
-                imgui.Columns(1)
 
                 imgui.EndChild()
             end
@@ -6490,7 +6303,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
         if imgui.BeginTabItem(fa.WALLET .. u8 'Обновления') then
             if updateInfo then
                 if imgui.BeginChild('##update', imgui.ImVec2(
-                                        688 * MONET_DPI_SCALE,
+                                        618 * MONET_DPI_SCALE,
                                         372 * MONET_DPI_SCALE), true) then
                     imgui.CenterText(fa.STAR ..
                                          u8 'История обновлений')
@@ -6498,40 +6311,14 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
 
                     local indent = string.rep(" ", 115)
 
-                    -- Четвёртый спойлер
-                    if imgui.CollapsingHeader(fa.TAG .. " " ..
-                                                  updateInfo.news[4].title ..
-                                                  indent ..
-                                                  updateInfo.news[4].date) then
-                        local text = table.concat(updateInfo.news[4].text, "\n")
-                        imgui.Text(text)
-                    end
-
-                    -- Третий спойлер
-                    if imgui.CollapsingHeader(fa.TAG .. " " ..
-                                                  updateInfo.news[3].title ..
-                                                  indent ..
-                                                  updateInfo.news[3].date) then
-                        local text = table.concat(updateInfo.news[3].text, "\n")
-                        imgui.Text(text)
-                    end
-
-                    -- Второй спойлер
-                    if imgui.CollapsingHeader(fa.TAG .. " " ..
-                                                  updateInfo.news[2].title ..
-                                                  indent ..
-                                                  updateInfo.news[2].date) then
-                        local text = table.concat(updateInfo.news[2].text, "\n")
-                        imgui.Text(text)
-                    end
-
-                    -- Первый спойлер
-                    if imgui.CollapsingHeader(fa.TAG .. " " ..
-                                                  updateInfo.news[1].title ..
-                                                  indent ..
-                                                  updateInfo.news[1].date) then
-                        local text = table.concat(updateInfo.news[1].text, "\n")
-                        imgui.Text(text)
+                    for i = #updateInfo.news, 1, -1 do
+                        local newsItem = updateInfo.news[i]
+                        if imgui.CollapsingHeader(fa.TAG .. " " ..
+                                                      newsItem.title .. indent ..
+                                                      newsItem.date) then
+                            local text = table.concat(newsItem.text, "\n")
+                            imgui.Text(text)
+                        end
                     end
 
                     imgui.EndChild() -- Закрываем Child только если он был открыт
@@ -6539,7 +6326,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             else
                 -- Если updateInfo = nil или false
                 if imgui.BeginChild('##update', imgui.ImVec2(
-                                        688 * MONET_DPI_SCALE,
+                                        618 * MONET_DPI_SCALE,
                                         372 * MONET_DPI_SCALE), true) then
                     imgui.CenterText(fa.MONEY_CHECK_DOLLAR ..
                                          u8 ' Обновления')
@@ -6556,15 +6343,15 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             imgui.EndTabItem()
         end
         if imgui.BeginTabItem(fa.FILE_PEN .. u8 ' Заметки') then
-            imgui.BeginChild('##1', imgui.ImVec2(690 * MONET_DPI_SCALE,
-                                                 340 * MONET_DPI_SCALE), true) -- Размеры вкладки "Заметки" (Y - 340px; X-690px)
+            imgui.BeginChild('##1', imgui.ImVec2(620 * MONET_DPI_SCALE,
+                                                 340 * MONET_DPI_SCALE), true) -- Размеры вкладки "Заметки" (Y - 340px; X-620px)
             imgui.Columns(2)
             imgui.CenterColumnText(
                 u8 "Список всех ваших заметок/шпаргалок:")
-            imgui.SetColumnWidth(-1, 595 * MONET_DPI_SCALE)
+            imgui.SetColumnWidth(-1, 530 * MONET_DPI_SCALE)
             imgui.NextColumn()
             imgui.CenterColumnText(u8 "Действие")
-            imgui.SetColumnWidth(-1, 150 * MONET_DPI_SCALE)
+            imgui.SetColumnWidth(-1, 140 * MONET_DPI_SCALE)
             imgui.Columns(1)
             imgui.Separator()
             for i, note in ipairs(notes.note) do
@@ -6708,14 +6495,14 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             imgui.EndTabItem()
         end
         if imgui.BeginTabItem(fa.GEAR .. u8 ' Настройки') then
-            imgui.BeginChild('##1', imgui.ImVec2(690 * MONET_DPI_SCALE,
+            imgui.BeginChild('##1', imgui.ImVec2(620 * MONET_DPI_SCALE,
                                                  180 * MONET_DPI_SCALE), true) -- Размеры вкладки "Настройки"
             imgui.CenterText(fa.CIRCLE_INFO ..
                                  u8 ' Дополнительная информация про хелпер')
             imgui.Separator()
             imgui.Text(fa.CIRCLE_INFO ..
                            u8 " Разработчик хелпера: " ..
-                           u8(tostring(thisScript().author)))
+                           u8(settings.general.author))
             imgui.Separator()
             imgui.Text(fa.CIRCLE_INFO ..
                            u8 " Установленная версия хелпера: " ..
@@ -6792,7 +6579,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                 imgui.End()
             end
             imgui.EndChild()
-            imgui.BeginChild('##3', imgui.ImVec2(689 * MONET_DPI_SCALE,
+            imgui.BeginChild('##3', imgui.ImVec2(619 * MONET_DPI_SCALE,
                                                  87 * MONET_DPI_SCALE), true)
             imgui.CenterText(fa.PALETTE ..
                                  u8 ' Цветовая тема хелпера:')
@@ -6843,7 +6630,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                     theme, 1) then theme[0] = 0 end
             end
             imgui.EndChild()
-            imgui.BeginChild("##2", imgui.ImVec2(689 * MONET_DPI_SCALE,
+            imgui.BeginChild("##2", imgui.ImVec2(619 * MONET_DPI_SCALE,
                                                  55 * MONET_DPI_SCALE), true)
             -- imgui.TextWrapped(u8('Нашли баг или есть предложение по улучшению хелпера? Сообщите об этом на нашем Discord сервере или на форуме BlastHack!'))
             -- imgui.TextWrapped(u8('Есть желание  Вы можете закинуть донатик! Реквизиты есть на нашем Discord сервере.'))
@@ -6853,7 +6640,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             imgui.CenterText(
                 u8 'Сообщите об этом на нашем Discord сервере или на форуме BlastHack!')
             imgui.EndChild()
-            imgui.BeginChild("##4", imgui.ImVec2(689 * MONET_DPI_SCALE,
+            imgui.BeginChild("##4", imgui.ImVec2(619 * MONET_DPI_SCALE,
                                                  35 * MONET_DPI_SCALE), true)
             if imgui.Button(fa.POWER_OFF .. u8 " Выключение ",
                             imgui.ImVec2(imgui.GetMiddleButtonX(4),
@@ -6928,10 +6715,7 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                                     u8 ' Да, сбросить', imgui.ImVec2(
                                     200 * MONET_DPI_SCALE, 25 * MONET_DPI_SCALE)) then
                     play_error_sound()
-                    os.remove(path_rptp)
-                    os.remove(path_notes)
-                    os.remove(path_settings)
-                    os.remove(path_commands)
+                    deleteHelperData()
                     imgui.CloseCurrentPopup()
                     reload_script = true
                     thisScript():reload()
@@ -6962,21 +6746,13 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
                                     u8 ' Да, я хочу удалить',
                                 imgui.ImVec2(200 * MONET_DPI_SCALE,
                                              25 * MONET_DPI_SCALE)) then
-                    sampAddChatMessage(script_tag ..
-                                           '  {ffffff}Хелпер полностю удалён из вашего устройства!',
-                                       message_color)
                     sampShowDialog(999999,
                                    message_color_hex .. "Goverment Helper",
                                    "Мне очень жаль что вы удалили Goverment Helper из своего устройства.\nЕсли удаление связано с негативным опытом использования, и вы сталкивались с багами или проблемами, то\nсообщите мне что именно заставило вас удалить хелпер на нашем Discord сервере или на форуме BlastHack\n\nDiscord: https://discord.com/invite/qBPEYjfNhv\nBlastHack: https://www.blast.hk/threads/195388/\n\nЕсли что, вы можете заново скачать и установить хелпер в любой момент :)",
                                    "Закрыть", '', 0)
                     reload_script = true
                     play_error_sound()
-                    os.remove(path_helper)
-                    os.remove(path_settings)
-                    os.remove(path_commands)
-                    os.remove(path_rptp)
-                    os.remove(path_notes)
-                    thisScript():unload()
+                    deleteHelperData(true)
                 end
                 imgui.End()
             end
@@ -6984,6 +6760,176 @@ imgui.OnFrame(function() return MainWindow[0] end, function(player)
             imgui.EndTabItem()
         end
         imgui.EndTabBar()
+    end
+    imgui.End()
+end)
+
+imgui.OnFrame(function() return MODULE.RPWeapon.Window[0] end, function(player)
+    imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2),
+                           imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
+    imgui.SetNextWindowSize(imgui.ImVec2(600 * settings.general.custom_dpi,
+                                         425 * settings.general.custom_dpi),
+                            imgui.Cond.FirstUseEver)
+    imgui.Begin(
+        fa.GUN .. u8 " RP отыгровка оружия в чате " ..
+            fa.GUN, MODULE.RPWeapon.Window,
+        imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize)
+    change_dpi()
+    imgui.PushItemWidth(385 * settings.general.custom_dpi)
+    imgui.InputTextWithHint(u8 '##inputsearch_weapon_name', u8(
+                                'Вводите чтобы искать оружие по его ID или названию...'),
+                            MODULE.RPWeapon.input_search, 256)
+    imgui.SameLine()
+    if imgui.Button(u8("Включить всё")) then
+        for index, value in ipairs(modules.rpgun.data.rp_guns) do
+            value.enable = true
+        end
+        save_module('rpgun')
+    end
+    imgui.SameLine()
+    if imgui.Button(u8("Отключить всё")) then
+        for index, value in ipairs(modules.rpgun.data.rp_guns) do
+            value.enable = false
+        end
+        save_module('rpgun')
+    end
+    if imgui.BeginChild('##rpguns1',
+                        imgui.ImVec2(588 * settings.general.custom_dpi,
+                                     361 * settings.general.custom_dpi), true) then
+        imgui.Columns(3)
+        imgui.CenterColumnText(u8 "Работоспособность")
+        imgui.SetColumnWidth(-1, 150 * settings.general.custom_dpi)
+        imgui.NextColumn()
+        imgui.CenterColumnText(u8 "ID и название оружия")
+        imgui.SetColumnWidth(-1, 300 * settings.general.custom_dpi)
+        imgui.NextColumn()
+        imgui.CenterColumnText(u8 "Расположение")
+        imgui.SetColumnWidth(-1, 150 * settings.general.custom_dpi)
+        imgui.Columns(1)
+        imgui.Separator()
+        local decoded_input =
+            u8:decode(ffi.string(MODULE.RPWeapon.input_search))
+        for index, value in ipairs(modules.rpgun.data.rp_guns) do
+            if decoded_input == '' or
+                (value.name and value.name:upper():find(decoded_input:upper())) or
+                value.id == tonumber(decoded_input) then
+                imgui.Columns(3)
+                if value.enable then
+                    if imgui.CenterColumnSmallButton(fa.SQUARE_CHECK ..
+                                                         u8 '  (работает)##' ..
+                                                         index, imgui.ImVec2(
+                                                         imgui.GetMiddleButtonX(
+                                                             5), 0)) then
+                        value.enable = not value.enable
+                        save_module('rpgun')
+                    end
+                else
+                    if imgui.CenterColumnSmallButton(fa.SQUARE ..
+                                                         u8 ' (отключён)##' ..
+                                                         index, imgui.ImVec2(
+                                                         imgui.GetMiddleButtonX(
+                                                             5), 0)) then
+                        value.enable = not value.enable
+                        save_module('rpgun')
+                    end
+                end
+                imgui.NextColumn()
+                imgui.CenterColumnText('[' .. value.id .. '] ' .. u8(value.name))
+                imgui.SameLine()
+                if imgui.SmallButton(fa.PEN_TO_SQUARE .. '##weapon_name' ..
+                                         index) then
+                    _G.weapon_input = imgui.new.char[256]()
+                    imgui.StrCopy(_G.weapon_input, u8(value.name))
+                    imgui.OpenPopup(fa.GUN ..
+                                        u8 ' Название оружия ' ..
+                                        fa.GUN .. '##weapon_name' .. index)
+                end
+                imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2),
+                                       imgui.Cond.Always, imgui.ImVec2(0.5, 0.5))
+                if imgui.BeginPopupModal(fa.GUN ..
+                                             u8 ' Название оружия ' ..
+                                             fa.GUN .. '##weapon_name' .. index,
+                                         _,
+                                         imgui.WindowFlags.NoCollapse +
+                                             imgui.WindowFlags.NoResize +
+                                             imgui.WindowFlags.AlwaysAutoResize) then
+                    change_dpi()
+                    imgui.PushItemWidth(400 * settings.general.custom_dpi)
+                    imgui.InputText(u8 '##weapon_name', _G.weapon_input, 256)
+                    if imgui.Button(fa.CIRCLE_XMARK .. u8 ' Отмена',
+                                    imgui.ImVec2(
+                                        200 * settings.general.custom_dpi,
+                                        25 * settings.general.custom_dpi)) then
+                        imgui.CloseCurrentPopup()
+                    end
+                    imgui.SameLine()
+                    if imgui.Button(fa.FLOPPY_DISK .. u8 ' Сохранить',
+                                    imgui.ImVec2(
+                                        200 * settings.general.custom_dpi,
+                                        25 * settings.general.custom_dpi)) then
+                        value.name = u8:decode(ffi.string(_G.weapon_input))
+                        save_module('rpgun')
+                        initialize_guns()
+                        _G.weapon_input = nil
+                        imgui.CloseCurrentPopup()
+                    end
+                    imgui.EndPopup()
+                end
+                imgui.NextColumn()
+                local position = ''
+                if value.rpTake == 1 then
+                    position = 'Спина'
+                elseif value.rpTake == 2 then
+                    position = 'Карман'
+                elseif value.rpTake == 3 then
+                    position = 'Пояс'
+                elseif value.rpTake == 4 then
+                    position = 'Кобура'
+                end
+                imgui.CenterColumnText(u8(position))
+                imgui.SameLine()
+                if imgui.SmallButton(fa.PEN_TO_SQUARE .. '##weapon_position' ..
+                                         index) then
+                    MODULE.RPWeapon.ComboTags[0] = value.rpTake - 1
+                    imgui.OpenPopup(fa.GUN ..
+                                        u8 ' Расположение оружия##weapon_name' ..
+                                        index)
+                end
+                imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2),
+                                       imgui.Cond.Always, imgui.ImVec2(0.5, 0.5))
+                if imgui.BeginPopupModal(fa.GUN ..
+                                             u8 ' Расположение оружия##weapon_name' ..
+                                             index, _,
+                                         imgui.WindowFlags.NoCollapse +
+                                             imgui.WindowFlags.NoResize +
+                                             imgui.WindowFlags.AlwaysAutoResize) then
+                    change_dpi()
+                    imgui.PushItemWidth(400 * settings.general.custom_dpi)
+                    imgui.Combo(u8 '##' .. index, MODULE.RPWeapon.ComboTags,
+                                MODULE.RPWeapon.ImItems, 4)
+                    if imgui.Button(fa.CIRCLE_XMARK .. u8 ' Отмена',
+                                    imgui.ImVec2(
+                                        200 * settings.general.custom_dpi,
+                                        25 * settings.general.custom_dpi)) then
+                        imgui.CloseCurrentPopup()
+                    end
+                    imgui.SameLine()
+                    if imgui.Button(fa.FLOPPY_DISK .. u8 ' Сохранить',
+                                    imgui.ImVec2(
+                                        200 * settings.general.custom_dpi,
+                                        25 * settings.general.custom_dpi)) then
+                        value.rpTake = MODULE.RPWeapon.ComboTags[0] + 1
+                        save_module('rpgun')
+                        initialize_guns()
+                        imgui.CloseCurrentPopup()
+                    end
+                    imgui.EndPopup()
+                end
+                imgui.Columns(1)
+                imgui.Separator()
+            end
+        end
+        imgui.EndChild()
     end
     imgui.End()
 end)
@@ -7978,91 +7924,6 @@ end, function(player)
     imgui.End()
 end)
 
-imgui.OnFrame(function()
-    isGeneralWindowOpen = JobInformationGeneralWindow[0]
-    isNowWindowOpen = JobInformationNowWindow[0]
-    isWindowOpen = InformationWindow[0]
-    return JobInformationGeneralWindow[0]
-end, function(player)
-    imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 8.5, sizeY / 2.1),
-                           imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-    imgui.SetNextWindowSize(imgui.ImVec2(225 * MONET_DPI_SCALE,
-                                         113 * MONET_DPI_SCALE),
-                            imgui.Cond.FirstUseEver)
-    imgui.Begin(fa.BUILDING_SHIELD .. u8 " Goverment Helper##info_menu", _,
-                imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize +
-                    imgui.WindowFlags.AlwaysAutoResize)
-
-    if not isMonetLoader() and not sampIsChatInputActive() then
-        player.HideCursor = true
-    else
-        player.HideCursor = false
-    end
-
-    if isWindowOpen then imgui.Separator() end
-
-    imgui.CenterText(u8('Общая статистика'))
-    imgui.Separator()
-    imgui.Text(fa.CITY .. u8(' Материалы: ') ..
-                   tostring(settings.player_organization_general.materials))
-    imgui.Text(fa.TRUCK .. u8(' Поставки в МЮ: ') ..
-                   tostring(
-                       settings.player_organization_general.postavki_materials))
-    imgui.Text(fa.CAR .. u8(' Поставки в МО(ТСР): ') ..
-                   tostring(
-                       settings.player_organization_general.postavki_kargobob))
-
-    -- Время отображается только если окно "Статистика за сегодня" закрыто
-    if isGeneralWindowOpen and not isNowWindowOpen then
-        imgui.Separator()
-        imgui.Text(fa.CLOCK .. u8(' Текущее время: ') ..
-                       u8(tagReplacements.get_time()))
-    end
-
-    imgui.End()
-end)
-
-imgui.OnFrame(function()
-    isGeneralWindowOpen = JobInformationGeneralWindow[0]
-    isNowWindowOpen = JobInformationNowWindow[0]
-    isWindowOpen = InformationWindow[0]
-    return JobInformationNowWindow[0]
-end, function(player)
-    imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 8.5, sizeY / 2.1),
-                           imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-    imgui.SetNextWindowSize(imgui.ImVec2(225 * MONET_DPI_SCALE,
-                                         113 * MONET_DPI_SCALE),
-                            imgui.Cond.FirstUseEver)
-    imgui.Begin(fa.BUILDING_SHIELD .. u8 " Goverment Helper##info_menu", _,
-                imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoResize +
-                    imgui.WindowFlags.AlwaysAutoResize)
-
-    if not isMonetLoader() and not sampIsChatInputActive() then
-        player.HideCursor = true
-    else
-        player.HideCursor = false
-    end
-
-    if isGeneralWindowOpen or isWindowOpen then imgui.Separator() end
-
-    imgui.CenterText(u8('Статистика за сегодня'))
-    imgui.Separator()
-    imgui.Text(fa.PLAY .. u8(' Материалы: ') ..
-                   tostring(settings.player_organization_now.materials))
-    imgui.Text(fa.KEYBOARD .. u8(' Поставки в МЮ: ') ..
-                   tostring(settings.player_organization_now.postavki_materials))
-    imgui.Text(
-        fa.MAP_LOCATION_DOT .. u8(' Поставки в МО(ТСР): ') ..
-            tostring(settings.player_organization_now.postavki_kargobob))
-
-    -- Время отображается только в этом окне, если оно открыто
-    imgui.Separator()
-    imgui.Text(fa.CLOCK .. u8(' Текущее время: ') ..
-                   u8(tagReplacements.get_time()))
-
-    imgui.End()
-end)
-
 imgui.OnFrame(function() return UpdateWindow[0] end, function(player)
     imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2),
                            imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
@@ -8941,30 +8802,46 @@ function ColorAccentsAdapter(color)
     return ret
 end
 
+function deleteHelperData(checker)
+    os.remove(configDirectory .. "/Settings.json")
+    os.remove(configDirectory .. "/Commands.json")
+    os.remove(configDirectory .. "/Notes.json")
+    os.remove(configDirectory .. "/Vehicles.json")
+    os.remove(configDirectory .. "/Guns.json")
+    os.remove(configDirectory .. "/Update_Info.json")
+    os.execute(folderDirectory)
+    if checker then
+        os.remove(thisScript().path)
+        sampAddChatMessage(script_tag ..
+                               '  {ffffff}Хелпер полностью удалён из вашего устройства!',
+                           message_color)
+        reload_script = true
+        thisScript():unload()
+    else
+        sampAddChatMessage(
+            '[Goverment Helper] {ffffff}Перезагрузка хелпера...',
+            message_color)
+        reload_script = true
+        thisScript():reload()
+    end
+end
+
 function main()
     if not isSampLoaded() or not isSampfuncsLoaded() then return end
     while not isSampAvailable() do wait(0) end
 
     welcome_message()
     initialize_commands()
+    load_modules()
+
     if settings.player_info.name_surname == '' or settings.player_info.fraction ==
         'Неизвестно' then
         sampAddChatMessage(
-            '[Justice Helper] {ffffff}Пытаюсь получить ваш /stats поскольку остуствуют данные про вас!',
+            '[Goverment Helper] {ffffff}Пытаюсь получить ваш /stats поскольку остуствуют данные про вас!',
             message_color)
         check_stats = true
         sampSendChat('/stats')
     end
-    if settings.general.use_info_menu then InformationWindow[0] = true end
-    if settings.player_organization_general.use_infojob_menu then
-        JobInformationGeneralWindow[0] = true
-    end
-
-    -- local result, check = pcall(check_update)
-    -- if not result then
-    -- 	sampAddChatMessage('[Justice Helper] {ffffff}Произошла ошибка при попытке проверить наличие обновлений!',
-    -- 		message_color)
-    -- end
 
     while true do
         wait(0)
@@ -8980,26 +8857,17 @@ function main()
             end
         end
 
-        if nowGun ~= getCurrentCharWeapon(PLAYER_PED) and
-            settings.general.rp_gun then
-            oldGun = nowGun
-            nowGun = getCurrentCharWeapon(PLAYER_PED)
-            if oldGun == 0 then
-                sampSendChat("/me " .. gunOn[nowGun] .. " " ..
-                                 weapons.get_name(nowGun) .. " " ..
-                                 gunPartOn[nowGun])
-            elseif nowGun == 0 then
-                sampSendChat("/me " .. gunOff[oldGun] .. " " ..
-                                 weapons.get_name(oldGun) .. " " ..
-                                 gunPartOff[oldGun])
-            else
-                sampSendChat("/me " .. gunOff[oldGun] .. " " ..
-                                 weapons.get_name(oldGun) .. " " ..
-                                 gunPartOff[oldGun] .. ", после чего " ..
-                                 gunOn[nowGun] .. " " ..
-                                 weapons.get_name(nowGun) .. " " ..
-                                 gunPartOn[nowGun])
+        if (settings.general.rp_guns) and
+            (modules.rpgun.data.nowGun ~= getCurrentCharWeapon(PLAYER_PED)) then
+            modules.rpgun.data.oldGun = modules.rpgun.data.nowGun
+            modules.rpgun.data.nowGun = getCurrentCharWeapon(PLAYER_PED)
+            if not isExistsWeapon(modules.rpgun.data.oldGun) then
+                handleNewWeapon(modules.rpgun.data.oldGun)
+            elseif not isExistsWeapon(modules.rpgun.data.nowGun) then
+                handleNewWeapon(modules.rpgun.data.nowGun)
             end
+            processWeaponChange(modules.rpgun.data.oldGun,
+                                modules.rpgun.data.nowGun)
         end
 
         if ((os.date("%M", os.time()) == "55" and os.date("%S", os.time()) ==
@@ -9008,14 +8876,8 @@ function main()
                 "00")) and settings.general.auto_notify_payday and
             getARZServerNumber() ~= '200' then
             sampAddChatMessage(
-                '[Justice Helper] {ffffff}Через 5 минут будет PAYDAY. Наденьте форму чтобы не пропустить зарплату!',
+                '[Goverment Helper] {ffffff}Через 5 минут будет PAYDAY. Наденьте форму чтобы не пропустить зарплату!',
                 message_color)
-            wait(1000)
-        end
-        if os.date("%H", os.time()) == "02" and os.date("%M", os.time()) == "00" then
-            settings.player_organization_now.materials = 0
-            settings.player_organization_now.postavki_kargobob = 0
-            settings.player_organization_now.postavki_materials = 0
             wait(1000)
         end
     end
