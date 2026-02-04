@@ -323,6 +323,18 @@ load_smart_rptp()
 
 ------------------------------------------ JSON & MODULES ----------------------------------------
 local modules = {
+    Initial = {
+        Window = imgui.new.bool(),
+        input = imgui.new.char[256](),
+        slider = imgui.new.int(0),
+        step = 0,
+        fraction_type_selector = 0,
+        fraction_type_selector_text = 'Без организации',
+        fraction_type_icon = nil,
+        step2_result = 0,
+        fraction_selector = 0,
+        fraction_selector_text = ''
+    },
     rpgun = {
         name = 'RP оружие',
         path = configDirectory .. "/Guns.json",
@@ -4287,6 +4299,19 @@ function check_update()
     end
 end
 
+function check_resourses()
+    if not doesDirectoryExist(configDirectory .. '/Resourse') then
+        createDirectory(configDirectory .. '/Resourse')
+    end
+    if not doesFileExist(configDirectory .. '/Resourse/logo.png') then
+        print('Подгружаю логотип хелпера...')
+        downloadFileFromUrlToPath(
+            'https://mtgmods.github.io/arizona-helper/Resourse/logo.png',
+            configDirectory .. '/Resourse/logo.png')
+        -- https://github.com/MTGMODS/arizona-helper/raw/refs/heads/main/Resourse/logo.png
+    end
+end
+
 function downloadToFile(url, path, callback, progressInterval)
     callback = callback or function() end
     progressInterval = progressInterval or 0.1
@@ -5038,6 +5063,32 @@ imgui.OnInitialize(function()
 end)
 
 imgui.OnFrame(function() return MainWindow[0] end, function(player)
+    if MODULE.Initial.step == 0 then
+        if (doesFileExist(configDirectory .. '/Resourse/logo.png')) then
+            if (not _G.helper_logo) then
+                local path = configDirectory .. '/Resourse/logo.png'
+                _G.helper_logo = imgui.CreateTextureFromFile(path)
+            else
+                imgui.Image(_G.helper_logo,
+                            imgui.ImVec2(520 * settings.general.custom_dpi,
+                                         150 * settings.general.custom_dpi))
+            end
+        else
+            if imgui.BeginChild('##init1_1',
+                                imgui.ImVec2(520 * settings.general.custom_dpi,
+                                             150 * settings.general.custom_dpi),
+                                true) then
+                imgui.Text("\n\n\n")
+                imgui.CenterTextDisabled(u8(
+                                             'Не удалось автоматически загрузить логотип и другие файлы хелпера!\n\n'))
+                imgui.CenterTextDisabled(u8(
+                                             'На время включите VPN для подгрузки нужных файлов, либо скачайте вручную'))
+                imgui.CenterTextDisabled(u8(
+                                             'https://github.com/MTGMODS/arizona-helper'))
+                imgui.EndChild()
+            end
+        end
+    end
     imgui.SetNextWindowPos(imgui.ImVec2(sizeX / 2, sizeY / 2),
                            imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
     imgui.SetNextWindowSize(imgui.ImVec2(630 * MONET_DPI_SCALE,
@@ -8833,6 +8884,7 @@ function main()
     welcome_message()
     initialize_commands()
     load_modules()
+    check_resourses()
 
     if settings.player_info.name_surname == '' or settings.player_info.fraction ==
         'Неизвестно' then
